@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.name }} — Progress Tracker{% endblock %}
+
+{% block content %}
+  <div class="page pt-page">
+    <a class="pt-back-link" href="{{ url_for('progress_tracker') }}">&larr; All Projects</a>
+
+    <header class="page-header pt-page-header">
+      <div>
+        <h1 class="pt-project-title" id="pt-project-title" title="Double-click to rename">{{ project.name }}</h1>
+        <p class="subtitle">Track weekly progress against the suggested quantities and cost weighting for each item.</p>
+      </div>
+      <div class="pt-page-actions">
+        <button type="button" class="btn-secondary" id="pt-add-category-btn">+ Add Category</button>
+        <button type="button" class="btn-secondary" id="pt-add-subcategory-btn">+ Add Subcategory</button>
+        <button type="button" class="btn-secondary" id="pt-add-item-btn">+ Add Item</button>
+        <button type="button" class="btn-primary" id="pt-add-week-btn">+ Add Week</button>
+        <button type="button" class="btn-secondary" id="pt-import-btn">Upload BOQ File</button>
+        <input type="file" id="pt-import-input" accept=".txt,.tsv,.csv" hidden />
+        <a class="btn-secondary" href="{{ url_for('api_export_progress_excel', project_id=project.id) }}">Export Excel</a>
+        <a class="btn-secondary" href="{{ url_for('api_export_progress_pdf', project_id=project.id) }}">Export PDF</a>
+        <button type="button" class="btn-secondary pt-delete-project-btn" id="pt-delete-project-btn">Delete Project</button>
+      </div>
+    </header>
+
+    <div class="pt-overall" id="pt-overall"></div>
+
+    <div class="pt-cards" id="pt-cards"></div>
+
+    <div class="pt-table-wrap">
+      <table class="pt-table" id="pt-table">
+        <thead>
+          <tr id="pt-table-head-row"></tr>
+        </thead>
+        <tbody id="pt-table-body"></tbody>
+        <tfoot>
+          <tr id="pt-table-foot-row"></tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <div class="pm-modal-overlay" id="pt-subcat-modal-overlay">
+    <div class="pm-modal pt-subcat-modal" id="pt-subcat-modal">
+      <div class="pm-modal-header">
+        <span class="pt-subcat-modal-title" id="pt-subcat-modal-title"></span>
+        <button type="button" class="pm-modal-close" id="pt-subcat-modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="pm-modal-body" id="pt-subcat-modal-body"></div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    window.PT_PROJECT_ID = {{ project.id | tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='progress_tracker.js') }}"></script>
+{% endblock %}

@@ -75,6 +75,74 @@ def init_db(db_path: str) -> None:
             )"""
         )
 
+        conn.execute(
+            """CREATE TABLE IF NOT EXISTS progress_projects (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL
+            )"""
+        )
+        conn.execute(
+            """CREATE TABLE IF NOT EXISTS progress_weeks (
+                id TEXT PRIMARY KEY,
+                project_id TEXT NOT NULL DEFAULT '',
+                label TEXT NOT NULL DEFAULT '',
+                position INTEGER NOT NULL
+            )"""
+        )
+        conn.execute(
+            """CREATE TABLE IF NOT EXISTS progress_items (
+                id TEXT PRIMARY KEY,
+                project_id TEXT NOT NULL DEFAULT '',
+                code TEXT NOT NULL DEFAULT '',
+                description TEXT NOT NULL DEFAULT '',
+                unit TEXT NOT NULL DEFAULT '',
+                suggested_quantity REAL NOT NULL DEFAULT 0,
+                project_cost_percent REAL NOT NULL DEFAULT 0,
+                is_category INTEGER NOT NULL DEFAULT 0,
+                position INTEGER NOT NULL
+            )"""
+        )
+        conn.execute(
+            """CREATE TABLE IF NOT EXISTS progress_entries (
+                id TEXT PRIMARY KEY,
+                item_id TEXT NOT NULL,
+                week_id TEXT NOT NULL,
+                progress_percent REAL NOT NULL DEFAULT 0,
+                UNIQUE(item_id, week_id)
+            )"""
+        )
+
+        progress_week_columns = {row[1] for row in conn.execute("PRAGMA table_info(progress_weeks)")}
+        if "project_id" not in progress_week_columns:
+            conn.execute("ALTER TABLE progress_weeks ADD COLUMN project_id TEXT NOT NULL DEFAULT ''")
+
+        progress_item_columns = {row[1] for row in conn.execute("PRAGMA table_info(progress_items)")}
+        if "project_id" not in progress_item_columns:
+            conn.execute("ALTER TABLE progress_items ADD COLUMN project_id TEXT NOT NULL DEFAULT ''")
+
+        # level: 0 = category (e.g. "A GENERAL"), 1 = subcategory tied to a
+        # category (e.g. "BS1 Conduits"), 2 = leaf item carrying real Unit /
+        # Quantity / Cost / progress data. Backfill from the older
+        # is_category flag (1 -> category, 0 -> item); it's left in the
+        # table unused rather than dropped.
+        if "level" not in progress_item_columns:
+            conn.execute("ALTER TABLE progress_items ADD COLUMN level INTEGER NOT NULL DEFAULT 2")
+            conn.execute("UPDATE progress_items SET level = 0 WHERE is_category = 1")
+            conn.execute("UPDATE progress_items SET level = 2 WHERE is_category = 0")
+
+        # Adopt any weeks/items created before projects existed into a
+        # default project, so already-entered tracker data isn't orphaned.
+        orphan_weeks = conn.execute("SELECT COUNT(*) FROM progress_weeks WHERE project_id = ''").fetchone()[0]
+        orphan_items = conn.execute("SELECT COUNT(*) FROM progress_items WHERE project_id = ''").fetchone()[0]
+        if orphan_weeks or orphan_items:
+            default_project_id = uuid.uuid4().hex
+            conn.execute(
+                "INSERT INTO progress_projects (id, name) VALUES (?, ?)",
+                (default_project_id, "Untitled Project"),
+            )
+            conn.execute("UPDATE progress_weeks SET project_id = ? WHERE project_id = ''", (default_project_id,))
+            conn.execute("UPDATE progress_items SET project_id = ? WHERE project_id = ''", (default_project_id,))
+
         payment_columns = {row[1]: row[2] for row in conn.execute("PRAGMA table_info(payment_rows)")}
         if payment_columns.get("pam_iris") == "TEXT":
             conn.execute("ALTER TABLE payment_rows RENAME TO payment_rows_old")
@@ -442,3 +510,240 @@ def delete_payment_row(row_id: str) -> bool:
     with _connect() as conn:
         cur = conn.execute("DELETE FROM payment_rows WHERE id = ?", (row_id,))
         return cur.rowcount > 0
+
+
+def list_progress_projects() -> list[dict]:
+    """Alphabetical by name — each project is a fully separate tracker
+    (its own categories, items, weeks, and entries), so there's no manual
+    ordering to preserve."""
+    with _connect() as conn:
+        rows = conn.execute("SELECT * FROM progress_projects ORDER BY name COLLATE NOCASE").fetchall()
+        return [dict(row) for row in rows]
+
+
+def get_progress_project(project_id: str) -> dict | None:
+    with _connect() as conn:
+        row = conn.execute("SELECT * FROM progress_projects WHERE id = ?", (project_id,)).fetchone()
+        return dict(row) if row else None
+
+
+def create_progress_project(name: str) -> dict:
+    with _connect() as conn:
+        project = {"id": uuid.uuid4().hex, "name": name}
+        conn.execute("INSERT INTO progress_projects (id, name) VALUES (?, ?)", (project["id"], project["name"]))
+        return project
+
+
+def rename_progress_project(project_id: str, name: str) -> dict | None:
+    with _connect() as conn:
+        cur = conn.execute("UPDATE progress_projects SET name = ? WHERE id = ?", (name, project_id))
+        if cur.rowcount == 0:
+            return None
+        return {"id": project_id, "name": name}
+
+
+def delete_progress_project(project_id: str) -> bool:
+    with _connect() as conn:
+        item_ids = [r[0] for r in conn.execute("SELECT id FROM progress_items WHERE project_id = ?", (project_id,))]
+        for item_id in item_ids:
+            conn.execute("DELETE FROM progress_entries WHERE item_id = ?", (item_id,))
+        conn.execute("DELETE FROM progress_items WHERE project_id = ?", (project_id,))
+
+        week_ids = [r[0] for r in conn.execute("SELECT id FROM progress_weeks WHERE project_id = ?", (project_id,))]
+        for week_id in week_ids:
+            conn.execute("DELETE FROM progress_entries WHERE week_id = ?", (week_id,))
+        conn.execute("DELETE FROM progress_weeks WHERE project_id = ?", (project_id,))
+
+        cur = conn.execute("DELETE FROM progress_projects WHERE id = ?", (project_id,))
+        return cur.rowcount > 0
+
+
+def replace_progress_data(project_id: str, week_labels: list[str], rows: list[dict]) -> dict:
+    """Wipes a project's tracker (categories, subcategories, items, weeks,
+    and progress entries) and repopulates it from an imported BOQ file —
+    see boq_import.parse(). Each row needs code/description/unit/
+    suggested_quantity/project_cost_percent/level/week_values (a list
+    aligned to week_labels)."""
+    with _connect() as conn:
+        item_ids = [r[0] for r in conn.execute("SELECT id FROM progress_items WHERE project_id = ?", (project_id,))]
+        for item_id in item_ids:
+            conn.execute("DELETE FROM progress_entries WHERE item_id = ?", (item_id,))
+        conn.execute("DELETE FROM progress_items WHERE project_id = ?", (project_id,))
+
+        week_ids = [r[0] for r in conn.execute("SELECT id FROM progress_weeks WHERE project_id = ?", (project_id,))]
+        for week_id in week_ids:
+            conn.execute("DELETE FROM progress_entries WHERE week_id = ?", (week_id,))
+        conn.execute("DELETE FROM progress_weeks WHERE project_id = ?", (project_id,))
+
+        new_week_ids = []
+        for position, label in enumerate(week_labels):
+            week_id = uuid.uuid4().hex
+            conn.execute(
+                "INSERT INTO progress_weeks (id, project_id, label, position) VALUES (?, ?, ?, ?)",
+                (week_id, project_id, label, position),
+            )
+            new_week_ids.append(week_id)
+
+        for position, row in enumerate(rows):
+            item_id = uuid.uuid4().hex
+            conn.execute(
+                """INSERT INTO progress_items
+                    (id, project_id, code, description, unit, suggested_quantity, project_cost_percent, level, position)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    item_id, project_id, row["code"], row["description"], row["unit"],
+                    row["suggested_quantity"], row["project_cost_percent"], row["level"], position,
+                ),
+            )
+            for week_idx, percent in enumerate(row.get("week_values", [])):
+                if week_idx >= len(new_week_ids) or not percent:
+                    continue
+                conn.execute(
+                    "INSERT INTO progress_entries (id, item_id, week_id, progress_percent) VALUES (?, ?, ?, ?)",
+                    (uuid.uuid4().hex, item_id, new_week_ids[week_idx], percent),
+                )
+
+        return {"weeks": len(new_week_ids), "items": len(rows)}
+
+
+def list_progress_weeks(project_id: str) -> list[dict]:
+    with _connect() as conn:
+        rows = conn.execute(
+            "SELECT * FROM progress_weeks WHERE project_id = ? ORDER BY position", (project_id,)
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+
+def create_progress_week(project_id: str, label: str = "") -> dict:
+    with _connect() as conn:
+        position = conn.execute(
+            "SELECT COALESCE(MAX(position), -1) + 1 FROM progress_weeks WHERE project_id = ?", (project_id,)
+        ).fetchone()[0]
+        week = {"id": uuid.uuid4().hex, "project_id": project_id, "label": label, "position": position}
+        conn.execute(
+            "INSERT INTO progress_weeks (id, project_id, label, position) VALUES (?, ?, ?, ?)",
+            (week["id"], week["project_id"], week["label"], week["position"]),
+        )
+        return week
+
+
+def rename_progress_week(week_id: str, label: str) -> dict | None:
+    with _connect() as conn:
+        cur = conn.execute("UPDATE progress_weeks SET label = ? WHERE id = ?", (label, week_id))
+        if cur.rowcount == 0:
+            return None
+        return {"id": week_id, "label": label}
+
+
+def delete_progress_week(week_id: str) -> bool:
+    with _connect() as conn:
+        conn.execute("DELETE FROM progress_entries WHERE week_id = ?", (week_id,))
+        cur = conn.execute("DELETE FROM progress_weeks WHERE id = ?", (week_id,))
+        return cur.rowcount > 0
+
+
+def _attach_progress_entries(conn: sqlite3.Connection, item: dict) -> dict:
+    rows = conn.execute(
+        "SELECT week_id, progress_percent FROM progress_entries WHERE item_id = ?", (item["id"],)
+    ).fetchall()
+    item["entries"] = {row["week_id"]: row["progress_percent"] for row in rows}
+    return item
+
+
+def list_progress_items(project_id: str) -> list[dict]:
+    """Alphabetical by Item code (e.g. A, A1, A2, B, BS1, BS2 — a category's
+    code is always a prefix of its children's, so this also reconstructs the
+    right BOQ grouping). `position` is only a tiebreak for equal/blank codes."""
+    with _connect() as conn:
+        rows = conn.execute(
+            "SELECT * FROM progress_items WHERE project_id = ? ORDER BY code COLLATE NOCASE, position",
+            (project_id,),
+        ).fetchall()
+        return [_attach_progress_entries(conn, dict(row)) for row in rows]
+
+
+def create_progress_item(project_id: str, level: int = 2) -> dict:
+    """level: 0 = category, 1 = subcategory (tied to the category above it),
+    2 = leaf item. See the schema comment in init_db."""
+    with _connect() as conn:
+        position = conn.execute(
+            "SELECT COALESCE(MAX(position), -1) + 1 FROM progress_items WHERE project_id = ?", (project_id,)
+        ).fetchone()[0]
+        item = {
+            "id": uuid.uuid4().hex,
+            "project_id": project_id,
+            "code": "",
+            "description": "",
+            "unit": "",
+            "suggested_quantity": 0,
+            "project_cost_percent": 0,
+            "level": level,
+            "position": position,
+        }
+        conn.execute(
+            """INSERT INTO progress_items
+                (id, project_id, code, description, unit, suggested_quantity, project_cost_percent, level, position)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                item["id"], item["project_id"], item["code"], item["description"], item["unit"],
+                item["suggested_quantity"], item["project_cost_percent"], item["level"], item["position"],
+            ),
+        )
+        item["entries"] = {}
+        return item
+
+
+PROGRESS_ITEM_FIELDS = ("code", "description", "unit", "suggested_quantity", "project_cost_percent", "level")
+
+
+def update_progress_item(item_id: str, **fields) -> dict | None:
+    with _connect() as conn:
+        row = conn.execute("SELECT * FROM progress_items WHERE id = ?", (item_id,)).fetchone()
+        if row is None:
+            return None
+        data = dict(row)
+        for key in PROGRESS_ITEM_FIELDS:
+            if fields.get(key) is not None:
+                data[key] = int(fields[key]) if key == "level" else fields[key]
+        conn.execute(
+            """UPDATE progress_items
+               SET code = ?, description = ?, unit = ?, suggested_quantity = ?,
+                   project_cost_percent = ?, level = ?
+               WHERE id = ?""",
+            (
+                data["code"], data["description"], data["unit"], data["suggested_quantity"],
+                data["project_cost_percent"], data["level"], item_id,
+            ),
+        )
+        return _attach_progress_entries(conn, data)
+
+
+def delete_progress_item(item_id: str) -> bool:
+    with _connect() as conn:
+        conn.execute("DELETE FROM progress_entries WHERE item_id = ?", (item_id,))
+        cur = conn.execute("DELETE FROM progress_items WHERE id = ?", (item_id,))
+        return cur.rowcount > 0
+
+
+def set_progress_entry(item_id: str, week_id: str, progress_percent: float) -> dict | None:
+    with _connect() as conn:
+        if conn.execute("SELECT 1 FROM progress_items WHERE id = ?", (item_id,)).fetchone() is None:
+            return None
+        if conn.execute("SELECT 1 FROM progress_weeks WHERE id = ?", (week_id,)).fetchone() is None:
+            return None
+        existing = conn.execute(
+            "SELECT id FROM progress_entries WHERE item_id = ? AND week_id = ?", (item_id, week_id)
+        ).fetchone()
+        if existing:
+            entry_id = existing["id"]
+            conn.execute(
+                "UPDATE progress_entries SET progress_percent = ? WHERE id = ?",
+                (progress_percent, entry_id),
+            )
+        else:
+            entry_id = uuid.uuid4().hex
+            conn.execute(
+                "INSERT INTO progress_entries (id, item_id, week_id, progress_percent) VALUES (?, ?, ?, ?)",
+                (entry_id, item_id, week_id, progress_percent),
+            )
+        return {"id": entry_id, "item_id": item_id, "week_id": week_id, "progress_percent": progress_percent}

@@ -8,7 +8,9 @@ from flask import Flask, render_template, request, send_file, jsonify
 
 from docx_filler import fill_template, REQUIRED_FIELDS
 from docx_filler_wad import fill_template_wad
+import boq_import
 import pm_db
+import progress_export
 
 
 def resource_path(*parts: str) -> str:
@@ -62,6 +64,21 @@ def working_advance():
 @app.route("/project-management")
 def project_management():
     return render_template("project_management.html", current_page="project-management")
+
+
+@app.route("/progress-tracker")
+def progress_tracker():
+    return render_template("progress_tracker.html", current_page="progress-tracker")
+
+
+@app.route("/progress-tracker/<project_id>")
+def progress_tracker_detail(project_id):
+    project = pm_db.get_progress_project(project_id)
+    if project is None:
+        return "Project not found", 404
+    return render_template(
+        "progress_tracker_detail.html", current_page="progress-tracker", project=project
+    )
 
 
 @app.route("/api/columns", methods=["GET"])
@@ -236,6 +253,176 @@ def api_update_payment_row(row_id):
 def api_delete_payment_row(row_id):
     pm_db.delete_payment_row(row_id)
     return "", 204
+
+
+@app.route("/api/progress/projects", methods=["GET"])
+def api_list_progress_projects():
+    return jsonify(pm_db.list_progress_projects())
+
+
+@app.route("/api/progress/projects", methods=["POST"])
+def api_create_progress_project():
+    data = request.get_json(silent=True) or {}
+    name = str(data.get("name") or "").strip()
+    if not name:
+        return jsonify({"error": "Name is required"}), 400
+    return jsonify(pm_db.create_progress_project(name)), 201
+
+
+@app.route("/api/progress/projects/<project_id>", methods=["PUT"])
+def api_rename_progress_project(project_id):
+    data = request.get_json(silent=True) or {}
+    name = str(data.get("name") or "").strip()
+    if not name:
+        return jsonify({"error": "Name is required"}), 400
+    project = pm_db.rename_progress_project(project_id, name)
+    if project is None:
+        return jsonify({"error": "Project not found"}), 404
+    return jsonify(project)
+
+
+@app.route("/api/progress/projects/<project_id>", methods=["DELETE"])
+def api_delete_progress_project(project_id):
+    pm_db.delete_progress_project(project_id)
+    return "", 204
+
+
+@app.route("/api/progress/projects/<project_id>/import", methods=["POST"])
+def api_import_progress(project_id):
+    if pm_db.get_progress_project(project_id) is None:
+        return jsonify({"error": "Project not found"}), 404
+
+    file = request.files.get("file")
+    if file is None or not file.filename:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    try:
+        text = file.read().decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return jsonify({"error": "Could not read the file as text (expected a tab-separated export)"}), 400
+
+    try:
+        week_labels, rows = boq_import.parse(text)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+    result = pm_db.replace_progress_data(project_id, week_labels, rows)
+    return jsonify(result), 200
+
+
+@app.route("/api/progress/projects/<project_id>/export/excel", methods=["GET"])
+def api_export_progress_excel(project_id):
+    project = pm_db.get_progress_project(project_id)
+    if project is None:
+        return jsonify({"error": "Project not found"}), 404
+    weeks = pm_db.list_progress_weeks(project_id)
+    items = pm_db.list_progress_items(project_id)
+    buf = progress_export.build_excel(project, weeks, items)
+    filename = f"{_safe_filename(project['name'])}_Progress_Tracker.xlsx"
+    return send_file(
+        buf,
+        as_attachment=True,
+        download_name=filename,
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+@app.route("/api/progress/projects/<project_id>/export/pdf", methods=["GET"])
+def api_export_progress_pdf(project_id):
+    project = pm_db.get_progress_project(project_id)
+    if project is None:
+        return jsonify({"error": "Project not found"}), 404
+    weeks = pm_db.list_progress_weeks(project_id)
+    items = pm_db.list_progress_items(project_id)
+    buf = progress_export.build_pdf(project, weeks, items)
+    filename = f"{_safe_filename(project['name'])}_Progress_Tracker.pdf"
+    return send_file(
+        buf,
+        as_attachment=True,
+        download_name=filename,
+        mimetype="application/pdf",
+    )
+
+
+@app.route("/api/progress/projects/<project_id>/weeks", methods=["GET"])
+def api_list_progress_weeks(project_id):
+    return jsonify(pm_db.list_progress_weeks(project_id))
+
+
+@app.route("/api/progress/projects/<project_id>/weeks", methods=["POST"])
+def api_create_progress_week(project_id):
+    data = request.get_json(silent=True) or {}
+    label = str(data.get("label") or "").strip()
+    return jsonify(pm_db.create_progress_week(project_id, label)), 201
+
+
+@app.route("/api/progress/weeks/<week_id>", methods=["PUT"])
+def api_rename_progress_week(week_id):
+    data = request.get_json(silent=True) or {}
+    label = str(data.get("label") or "").strip()
+    week = pm_db.rename_progress_week(week_id, label)
+    if week is None:
+        return jsonify({"error": "Week not found"}), 404
+    return jsonify(week)
+
+
+@app.route("/api/progress/weeks/<week_id>", methods=["DELETE"])
+def api_delete_progress_week(week_id):
+    pm_db.delete_progress_week(week_id)
+    return "", 204
+
+
+@app.route("/api/progress/projects/<project_id>/items", methods=["GET"])
+def api_list_progress_items(project_id):
+    return jsonify(pm_db.list_progress_items(project_id))
+
+
+@app.route("/api/progress/projects/<project_id>/items", methods=["POST"])
+def api_create_progress_item(project_id):
+    data = request.get_json(silent=True) or {}
+    try:
+        level = int(data.get("level", 2))
+    except (TypeError, ValueError):
+        level = 2
+    return jsonify(pm_db.create_progress_item(project_id, level)), 201
+
+
+@app.route("/api/progress/items/<item_id>", methods=["PUT"])
+def api_update_progress_item(item_id):
+    data = request.get_json(silent=True) or {}
+    item = pm_db.update_progress_item(
+        item_id,
+        code=data.get("code"),
+        description=data.get("description"),
+        unit=data.get("unit"),
+        suggested_quantity=data.get("suggested_quantity"),
+        project_cost_percent=data.get("project_cost_percent"),
+        level=data.get("level"),
+    )
+    if item is None:
+        return jsonify({"error": "Item not found"}), 404
+    return jsonify(item)
+
+
+@app.route("/api/progress/items/<item_id>", methods=["DELETE"])
+def api_delete_progress_item(item_id):
+    pm_db.delete_progress_item(item_id)
+    return "", 204
+
+
+@app.route("/api/progress/entries", methods=["PUT"])
+def api_set_progress_entry():
+    data = request.get_json(silent=True) or {}
+    item_id = str(data.get("item_id") or "")
+    week_id = str(data.get("week_id") or "")
+    try:
+        progress_percent = float(data.get("progress_percent") or 0)
+    except (TypeError, ValueError):
+        progress_percent = 0
+    entry = pm_db.set_progress_entry(item_id, week_id, progress_percent)
+    if entry is None:
+        return jsonify({"error": "Item or week not found"}), 404
+    return jsonify(entry)
 
 
 @app.route("/generate", methods=["POST"])

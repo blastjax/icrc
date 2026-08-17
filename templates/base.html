@@ -13,6 +13,7 @@
       <a class="sidebar-link{% if current_page == 'contract' %} active{% endif %}" href="{{ url_for('index') }}">Contract for Works</a>
       <a class="sidebar-link{% if current_page == 'working-advance' %} active{% endif %}" href="{{ url_for('working_advance') }}">Working Advance</a>
       <a class="sidebar-link{% if current_page == 'project-management' %} active{% endif %}" href="{{ url_for('project_management') }}">Project Management</a>
+      <a class="sidebar-link{% if current_page == 'progress-tracker' %} active{% endif %}" href="{{ url_for('progress_tracker') }}">Progress Tracker</a>
     </nav>
     <main class="content">
       {% block content %}{% endblock %}

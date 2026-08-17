@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Progress Tracker{% endblock %}
+
+{% block content %}
+  <div class="page pt-page">
+    <header class="page-header pt-page-header">
+      <div>
+        <h1>Progress Tracker</h1>
+        <p class="subtitle">Each project has its own tracker. Pick one below, or start a new one.</p>
+      </div>
+    </header>
+
+    <div class="pt-projects" id="pt-projects"></div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='progress_tracker_projects.js') }}"></script>
+{% endblock %}
