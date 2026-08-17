@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Working Advance{% endblock %}
+
+{% block content %}
+  <div class="page">
+    <header class="page-header">
+      <h1>Working Advance</h1>
+      <p class="subtitle">Fill in the fields below to generate the Working Advance document.</p>
+    </header>
+
+    <form id="wad-form" class="card" novalidate>
+      <section class="form-section">
+        <h2>Working Advance</h2>
+        <div class="grid two-col">
+          <div class="field">
+            <label for="wad_number">WAD Number</label>
+            <input type="text" id="wad_number" name="WAD Number" required />
+          </div>
+          <div class="field">
+            <label for="wad_date">WAD Date</label>
+            <input type="date" id="wad_date" name="WAD Date" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="wad_amount">WAD Amount</label>
+          <input type="text" id="wad_amount" name="WAD Amount" required />
+        </div>
+        <div class="field">
+          <label for="wad_amount_words">WAD Amount in Words</label>
+          <input type="text" id="wad_amount_words" name="WAD Amount in Words" required />
+        </div>
+        <div class="field">
+          <label for="wad_purpose">WAD Purpose</label>
+          <input type="text" id="wad_purpose" name="WAD Purpose" required />
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Settlement of Working Advance</h2>
+        <p class="section-hint">
+          Add one row per receipt/expense. If the detail starts with "Staff Per Diem", the date and receipt
+          number for that row are optional. Up to 13 entries are supported.
+        </p>
+        <div id="swa-entries"></div>
+        <template id="swa-entry-template">
+          <div class="swa-entry">
+            <div class="grid four-col">
+              <div class="field">
+                <label>SWA Date</label>
+                <input type="date" class="swa-date" />
+              </div>
+              <div class="field">
+                <label>SWA Receipt Number</label>
+                <input type="text" class="swa-receipt" />
+              </div>
+              <div class="field">
+                <label>SWA Detail</label>
+                <input type="text" class="swa-detail" required />
+              </div>
+              <div class="field">
+                <label>SWA Expenses</label>
+                <input type="text" class="swa-expenses" required />
+              </div>
+            </div>
+            <button type="button" class="btn-secondary swa-remove-btn">Remove entry</button>
+          </div>
+        </template>
+        <div class="actions" style="justify-content: flex-start;">
+          <button type="button" id="swa-add-btn" class="btn-secondary">Add entry</button>
+        </div>
+        <p id="swa-limit-note" class="section-hint" style="display: none;">Maximum of 13 entries reached.</p>
+      </section>
+
+      <section class="form-section">
+        <h2>Settlement Totals</h2>
+        <div class="grid two-col">
+          <div class="field optional">
+            <label for="swa_received">SWA Received</label>
+            <input type="text" id="swa_received" name="SWA Received" />
+          </div>
+          <div class="field optional">
+            <label for="swa_returned">SWA Returned</label>
+            <input type="text" id="swa_returned" name="SWA Returned" />
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Approval</h2>
+        <div class="grid two-col">
+          <div class="field">
+            <label for="hwa_date">HWA Date</label>
+            <input type="date" id="hwa_date" name="HWA Date" required />
+          </div>
+        </div>
+      </section>
+
+      <div id="wad-form-message" class="message" role="alert"></div>
+
+      <div class="actions">
+        <button type="reset" class="btn-secondary" id="wad-reset-btn">Clear</button>
+        <button type="submit" class="btn-primary" id="wad-submit-btn">Generate Working Advance</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='number-to-words.js') }}"></script>
+  <script src="{{ url_for('static', filename='wad.js') }}"></script>
+{% endblock %}

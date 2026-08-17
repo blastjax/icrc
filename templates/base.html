@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{% block title %}ICRC Document Generator{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="app-shell">
+    <nav class="sidebar">
+      <div class="sidebar-title">ICRC Document Generator</div>
+      <a class="sidebar-link{% if current_page == 'contract' %} active{% endif %}" href="{{ url_for('index') }}">Contract for Works</a>
+      <a class="sidebar-link{% if current_page == 'working-advance' %} active{% endif %}" href="{{ url_for('working_advance') }}">Working Advance</a>
+      <a class="sidebar-link{% if current_page == 'project-management' %} active{% endif %}" href="{{ url_for('project_management') }}">Project Management</a>
+    </nav>
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

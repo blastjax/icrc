@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Project Management{% endblock %}
+
+{% block content %}
+  <div class="page pm-page">
+    <header class="page-header pm-page-header">
+      <div>
+        <h1>Project Management</h1>
+        <p class="subtitle">Drag tasks between columns. Click a task to see details.</p>
+      </div>
+      <button type="button" class="btn-primary" id="pm-add-task-btn">+ Add Task</button>
+    </header>
+
+    <div class="pm-board" id="pm-board">
+      <!-- columns are rendered by project.js -->
+    </div>
+  </div>
+
+  <div class="pm-modal-overlay" id="pm-modal-overlay">
+    <div class="pm-modal" id="pm-modal">
+      <div class="pm-modal-header">
+        <input type="text" id="pm-detail-title" class="pm-detail-title-input" placeholder="Task title" />
+        <button type="button" class="pm-modal-close" id="pm-modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="pm-modal-body">
+        <div class="field">
+          <label for="pm-detail-status">Status</label>
+          <select id="pm-detail-status"></select>
+        </div>
+        <div class="field">
+          <label for="pm-detail-description">Description</label>
+          <textarea id="pm-detail-description" rows="6" placeholder="Add a description..."></textarea>
+        </div>
+        <p class="section-hint" id="pm-detail-meta"></p>
+
+        <div class="field">
+          <label>Custom Fields</label>
+          <div id="pm-detail-fields" class="pm-fields"></div>
+          <button type="button" class="btn-secondary pm-add-field-btn" id="pm-add-field-btn">+ Add custom field</button>
+        </div>
+
+        <div class="field">
+          <label>Payment Tracker</label>
+          <button type="button" class="btn-secondary" id="pm-open-payment-tracker-btn">Payment Tracker</button>
+        </div>
+      </div>
+      <div class="pm-modal-footer">
+        <button type="button" class="btn-secondary" id="pm-delete-task-btn">Delete</button>
+        <div class="pm-modal-footer-right">
+          <button type="button" class="btn-secondary" id="pm-duplicate-task-btn">Duplicate</button>
+          <button type="button" class="btn-primary" id="pm-save-task-btn">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pm-modal-overlay pm-payment-modal-overlay" id="pm-payment-modal-overlay">
+    <div class="pm-modal pm-payment-modal" id="pm-payment-modal">
+      <div class="pm-modal-header">
+        <span class="pm-payment-modal-title">Payment Tracker</span>
+        <button type="button" class="pm-modal-close" id="pm-payment-modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="pm-modal-body">
+        <div class="pm-payment-table-wrap">
+          <table class="pm-payment-table">
+            <thead>
+              <tr>
+                <th>Payment No.</th>
+                <th>Description</th>
+                <th>PAM/IRIS</th>
+                <th>CDP (CHF)</th>
+                <th>Invoice Amount</th>
+                <th>Expected Date</th>
+                <th>Payment Status</th>
+                <th>Invoice Link</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="pm-payment-rows"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="pm-payment-total-label">TOTAL PROJECT COST</td>
+                <td id="pm-payment-total-cdp" class="pm-payment-total-value"></td>
+                <td id="pm-payment-total-invoice" class="pm-payment-total-value"></td>
+                <td colspan="4"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <button type="button" class="btn-secondary" id="pm-add-payment-row-btn">+ Add row</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='project.js') }}"></script>
+{% endblock %}

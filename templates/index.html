@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Contract for Works{% endblock %}
+
+{% block content %}
+  <div class="page">
+    <header class="page-header">
+      <h1>Contract for Works</h1>
+      <p class="subtitle">Fill in the fields below to generate the contract document.</p>
+    </header>
+
+    <form id="contract-form" class="card" novalidate>
+      <section class="form-section">
+        <h2>Project</h2>
+        <div class="field">
+          <label for="project_name">Project Name</label>
+          <input type="text" id="project_name" name="Project Name" required />
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Amounts</h2>
+        <div class="grid two-col">
+          <div class="field">
+            <label for="sr_number">SR Number</label>
+            <input type="text" id="sr_number" name="SR Number" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="currency_exchange">Currency Exchange</label>
+          <input type="text" id="currency_exchange" />
+          <p class="section-hint" style="margin: 4px 0 0;">Total Amount PHP &divide; Currency Exchange = Total Amount CHF</p>
+        </div>
+        <div class="grid two-col">
+          <div class="field">
+            <label for="total_amount_ph">Total Amount PHP</label>
+            <input type="text" id="total_amount_ph" name="Total Amount PH" required />
+          </div>
+          <div class="field">
+            <label for="total_amount_chf">Total Amount CHF</label>
+            <input type="text" id="total_amount_chf" name="Total Amount CHF" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="total_amount_words">Total Amount PHP in Words</label>
+          <input type="text" id="total_amount_words" name="Total Amount PH in Words" required />
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Dates</h2>
+        <div class="grid three-col">
+          <div class="field">
+            <label for="contract_sign_date">Contract Sign Date</label>
+            <input type="date" id="contract_sign_date" name="Contract Sign Date" required />
+          </div>
+          <div class="field">
+            <label for="project_start_date">Project Start Date</label>
+            <input type="date" id="project_start_date" name="Project Start Date" required />
+          </div>
+          <div class="field">
+            <label for="project_end_date">Project End Date</label>
+            <input type="date" id="project_end_date" name="Project End Date" required />
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Contractor Details</h2>
+        <div class="grid two-col">
+          <div class="field">
+            <label for="contractor_name">Contractor Name</label>
+            <input type="text" id="contractor_name" name="Contractor Name" required />
+          </div>
+          <div class="field">
+            <label for="contractor_phone">Contractor Phone Number</label>
+            <input type="tel" id="contractor_phone" name="Contractor Phone Number" required />
+          </div>
+          <div class="field">
+            <label for="contractor_email">Contractor Email</label>
+            <input type="email" id="contractor_email" name="Contractor Email" required />
+          </div>
+          <div class="field">
+            <label for="contractor_rep_name">Contractor Rep Name</label>
+            <input type="text" id="contractor_rep_name" name="Contractor Rep Name" required />
+          </div>
+          <div class="field">
+            <label for="contractor_rep_position">Contractor Rep Position</label>
+            <input type="text" id="contractor_rep_position" name="Contractor Rep Position" required />
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Bank Details</h2>
+        <div class="grid two-col">
+          <div class="field">
+            <label for="account_holder">Contractor Account Holder</label>
+            <input type="text" id="account_holder" name="Contractor Account Holder" required />
+          </div>
+          <div class="field">
+            <label for="bank_name">Contractor Bank Name</label>
+            <input type="text" id="bank_name" name="Contractor Bank Name" required />
+          </div>
+          <div class="field">
+            <label for="account_number">Contractor Account Number</label>
+            <input type="text" id="account_number" name="Contractor Account Number" required />
+          </div>
+        </div>
+      </section>
+
+      <div id="form-message" class="message" role="alert"></div>
+
+      <div class="actions">
+        <button type="reset" class="btn-secondary">Clear</button>
+        <button type="submit" class="btn-primary" id="submit-btn">Generate Contract</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='number-to-words.js') }}"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}
