@@ -28,7 +28,7 @@ from openpyxl.utils import get_column_letter
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 LEVEL_CATEGORY = 0
 LEVEL_SUBCATEGORY = 1
@@ -471,7 +471,14 @@ def build_pdf(project: dict, weeks: list[dict], items: list[dict]) -> io.BytesIO
     category_cards = _build_category_cards_grid(items, weeks, page_width)
     if category_cards is not None:
         flowables.append(category_cards)
-        flowables.append(Spacer(1, 12))
+
+    # Page 1 is the completion summary only — the table always starts on
+    # page 2, however much (or little) room the cards above take up. No
+    # Spacer between the last card and this break: if it doesn't fit in
+    # whatever sliver of page 1 remains, reportlab pushes just the Spacer
+    # onto a fresh page, and the PageBreak right after it then forces yet
+    # another page — leaving a blank page between the cards and the table.
+    flowables.append(PageBreak())
 
     header_style = ParagraphStyle(
         "header",

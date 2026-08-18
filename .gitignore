@@ -1,2 +1,4 @@
 data/
 project_management.db
+
+__pycache__/
