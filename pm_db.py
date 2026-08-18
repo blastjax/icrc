@@ -33,9 +33,23 @@ def init_db(db_path: str) -> None:
                 title TEXT NOT NULL,
                 description TEXT NOT NULL DEFAULT '',
                 status TEXT NOT NULL,
-                created_at TEXT NOT NULL
+                created_at TEXT NOT NULL,
+                position INTEGER NOT NULL DEFAULT 0
             )"""
         )
+
+        task_columns = {row[1] for row in conn.execute("PRAGMA table_info(tasks)")}
+        if "position" not in task_columns:
+            conn.execute("ALTER TABLE tasks ADD COLUMN position INTEGER NOT NULL DEFAULT 0")
+            for status_row in conn.execute("SELECT DISTINCT status FROM tasks"):
+                task_ids = [
+                    r[0]
+                    for r in conn.execute(
+                        "SELECT id FROM tasks WHERE status = ? ORDER BY created_at", (status_row[0],)
+                    )
+                ]
+                for position, task_id in enumerate(task_ids):
+                    conn.execute("UPDATE tasks SET position = ? WHERE id = ?", (position, task_id))
         conn.execute(
             """CREATE TABLE IF NOT EXISTS custom_fields (
                 id TEXT PRIMARY KEY,
@@ -183,16 +197,20 @@ def _connect():
 
 
 def _insert_task(conn: sqlite3.Connection, title: str, status: str, description: str = "") -> dict:
+    position = conn.execute(
+        "SELECT COALESCE(MAX(position), -1) + 1 FROM tasks WHERE status = ?", (status,)
+    ).fetchone()[0]
     task = {
         "id": uuid.uuid4().hex,
         "title": title,
         "description": description,
         "status": status,
         "created_at": datetime.now(timezone.utc).isoformat(),
+        "position": position,
     }
     conn.execute(
-        "INSERT INTO tasks (id, title, description, status, created_at) VALUES (?, ?, ?, ?, ?)",
-        (task["id"], task["title"], task["description"], task["status"], task["created_at"]),
+        "INSERT INTO tasks (id, title, description, status, created_at, position) VALUES (?, ?, ?, ?, ?, ?)",
+        (task["id"], task["title"], task["description"], task["status"], task["created_at"], task["position"]),
     )
     return task
 
@@ -243,6 +261,14 @@ def _slugify(title: str) -> str:
     return slug or "column"
 
 
+def reorder_columns(order: list[str]) -> list[dict]:
+    with _connect() as conn:
+        for position, key in enumerate(order):
+            conn.execute("UPDATE columns SET position = ? WHERE key = ?", (position, key))
+        rows = conn.execute("SELECT key, title FROM columns ORDER BY position").fetchall()
+        return [dict(row) for row in rows]
+
+
 def create_column(title: str) -> dict:
     with _connect() as conn:
         existing_keys = {row[0] for row in conn.execute("SELECT key FROM columns")}
@@ -263,7 +289,7 @@ def create_column(title: str) -> dict:
 
 def list_tasks() -> list[dict]:
     with _connect() as conn:
-        rows = conn.execute("SELECT * FROM tasks ORDER BY created_at").fetchall()
+        rows = conn.execute("SELECT * FROM tasks ORDER BY status, position").fetchall()
         return [_attach_custom_fields(conn, dict(row)) for row in rows]
 
 
@@ -283,13 +309,55 @@ def update_task(task_id: str, title: str | None = None, description: str | None 
             task["title"] = title
         if description is not None:
             task["description"] = description
-        if status is not None:
+        if status is not None and status != task["status"]:
+            _relocate_task(conn, task_id, task["status"], status, index=None)
             task["status"] = status
         conn.execute(
             "UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ?",
             (task["title"], task["description"], task["status"], task_id),
         )
         return _attach_custom_fields(conn, task)
+
+
+def _relocate_task(conn: sqlite3.Connection, task_id: str, old_status: str, new_status: str, index: int | None) -> None:
+    """Places `task_id` into `new_status` at `index` (end of column if
+    None), then reassigns 0..n-1 positions for both the destination column
+    and (if different) the now-vacated source column so positions stay
+    contiguous."""
+    dest_ids = [
+        r[0]
+        for r in conn.execute(
+            "SELECT id FROM tasks WHERE status = ? AND id != ? ORDER BY position", (new_status, task_id)
+        )
+    ]
+    if index is None:
+        index = len(dest_ids)
+    index = max(0, min(index, len(dest_ids)))
+    dest_ids.insert(index, task_id)
+    for position, tid in enumerate(dest_ids):
+        conn.execute("UPDATE tasks SET position = ? WHERE id = ?", (position, tid))
+
+    if new_status != old_status:
+        source_ids = [
+            r[0] for r in conn.execute("SELECT id FROM tasks WHERE status = ? ORDER BY position", (old_status,))
+        ]
+        for position, tid in enumerate(source_ids):
+            conn.execute("UPDATE tasks SET position = ? WHERE id = ?", (position, tid))
+
+
+def reorder_task(task_id: str, status: str, index: int) -> dict | None:
+    """Moves a task to `status` column at `index` (0-based), used for
+    drag-and-drop reordering within or across columns."""
+    with _connect() as conn:
+        row = conn.execute("SELECT * FROM tasks WHERE id = ?", (task_id,)).fetchone()
+        if row is None:
+            return None
+        old_status = row["status"]
+        _relocate_task(conn, task_id, old_status, status, index)
+        if status != old_status:
+            conn.execute("UPDATE tasks SET status = ? WHERE id = ?", (status, task_id))
+        updated = conn.execute("SELECT * FROM tasks WHERE id = ?", (task_id,)).fetchone()
+        return _attach_custom_fields(conn, dict(updated))
 
 
 def duplicate_task(task_id: str) -> dict | None:

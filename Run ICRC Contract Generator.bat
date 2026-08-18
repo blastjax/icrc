@@ -34,6 +34,13 @@ if not exist "%PYTHON%" (
 
 cd /d "%PROJECT_DIR%"
 
+echo Checking for updates...
+git pull
+if errorlevel 1 (
+    echo Warning: git pull failed. Continuing with the current version.
+)
+echo.
+
 rem Open the browser a couple seconds after launch, once the server is up.
 start "" /min cmd /c "timeout /t 2 /nobreak >nul & start http://127.0.0.1:5000/"
 

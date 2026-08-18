@@ -95,6 +95,15 @@ def api_create_column():
     return jsonify(pm_db.create_column(title)), 201
 
 
+@app.route("/api/columns/reorder", methods=["POST"])
+def api_reorder_columns():
+    data = request.get_json(silent=True) or {}
+    order = data.get("order")
+    if not isinstance(order, list) or not all(isinstance(k, str) for k in order):
+        return jsonify({"error": "order must be a list of column keys"}), 400
+    return jsonify(pm_db.reorder_columns(order))
+
+
 @app.route("/api/columns/<key>", methods=["PUT"])
 def api_rename_column(key):
     data = request.get_json(silent=True) or {}
@@ -141,6 +150,19 @@ def api_update_task(task_id):
         description=data.get("description"),
         status=data.get("status"),
     )
+    if task is None:
+        return jsonify({"error": "Task not found"}), 404
+    return jsonify(task)
+
+
+@app.route("/api/tasks/<task_id>/move", methods=["POST"])
+def api_move_task(task_id):
+    data = request.get_json(silent=True) or {}
+    status = data.get("status")
+    index = data.get("index")
+    if not status or not isinstance(index, int):
+        return jsonify({"error": "status and index are required"}), 400
+    task = pm_db.reorder_task(task_id, status, index)
     if task is None:
         return jsonify({"error": "Task not found"}), 404
     return jsonify(task)

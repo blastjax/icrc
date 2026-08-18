@@ -22,8 +22,41 @@
   let tasks = [];
   let activeTaskId = null;
   let dragTaskId = null;
+  let dropHandled = false;
+  let dragColumnKey = null;
+  let columnDropHandled = false;
   let paymentTaskId = null;
   let paymentRows = [];
+
+  function getDragAfterElement(list, y) {
+    const cards = [...list.querySelectorAll(".pm-task-card:not(.dragging)")];
+    return cards.reduce(
+      (closest, card) => {
+        const box = card.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset, element: card };
+        }
+        return closest;
+      },
+      { offset: Number.NEGATIVE_INFINITY, element: null }
+    ).element;
+  }
+
+  function getColumnAfterElement(container, x) {
+    const columns = [...container.querySelectorAll(".pm-column:not(.dragging-column)")];
+    return columns.reduce(
+      (closest, colEl) => {
+        const box = colEl.getBoundingClientRect();
+        const offset = x - box.left - box.width / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset, element: colEl };
+        }
+        return closest;
+      },
+      { offset: Number.NEGATIVE_INFINITY, element: null }
+    ).element;
+  }
 
   async function api(url, options) {
     const res = await fetch(url, {
@@ -61,19 +94,45 @@
       colEl.querySelector(".pm-column-title").addEventListener("dblclick", (e) => startRenameColumn(e.target, col));
       colEl.querySelector(".pm-column-delete").addEventListener("click", () => deleteColumn(col));
 
+      const headerEl = colEl.querySelector(".pm-column-header");
+      headerEl.draggable = true;
+      headerEl.addEventListener("dragstart", (e) => {
+        dragColumnKey = col.key;
+        columnDropHandled = false;
+        colEl.classList.add("dragging-column");
+      });
+      headerEl.addEventListener("dragend", () => {
+        dragColumnKey = null;
+        colEl.classList.remove("dragging-column");
+        if (!columnDropHandled) renderBoard();
+      });
+
       const list = colEl.querySelector(".pm-task-list");
       colTasks.forEach((task) => list.appendChild(createTaskCard(task)));
 
       list.addEventListener("dragover", (e) => {
+        if (!dragTaskId) return;
         e.preventDefault();
         list.classList.add("drag-over");
+        const dragging = board.querySelector(".pm-task-card.dragging");
+        if (!dragging) return;
+        const afterElement = getDragAfterElement(list, e.clientY);
+        if (afterElement == null) {
+          list.appendChild(dragging);
+        } else if (afterElement !== dragging) {
+          list.insertBefore(dragging, afterElement);
+        }
       });
       list.addEventListener("dragleave", () => list.classList.remove("drag-over"));
       list.addEventListener("drop", (e) => {
+        if (!dragTaskId) return;
         e.preventDefault();
         list.classList.remove("drag-over");
-        if (!dragTaskId) return;
-        moveTask(dragTaskId, col.key);
+        dropHandled = true;
+        const index = [...list.querySelectorAll(".pm-task-card")].findIndex(
+          (el) => el.dataset.id === String(dragTaskId)
+        );
+        moveTask(dragTaskId, col.key, index === -1 ? undefined : index);
       });
 
       colEl.querySelector(".pm-add-in-column").addEventListener("click", () => addTask(col.key));
@@ -83,6 +142,26 @@
 
     board.appendChild(createAddColumnControl());
   }
+
+  board.addEventListener("dragover", (e) => {
+    if (!dragColumnKey) return;
+    e.preventDefault();
+    const dragging = board.querySelector(".pm-column.dragging-column");
+    if (!dragging) return;
+    const afterElement = getColumnAfterElement(board, e.clientX);
+    if (afterElement == null) {
+      board.insertBefore(dragging, board.querySelector(".pm-add-column"));
+    } else if (afterElement !== dragging) {
+      board.insertBefore(dragging, afterElement);
+    }
+  });
+  board.addEventListener("drop", (e) => {
+    if (!dragColumnKey) return;
+    e.preventDefault();
+    columnDropHandled = true;
+    const keys = [...board.querySelectorAll(".pm-column")].map((el) => el.dataset.status);
+    reorderColumns(keys);
+  });
 
   function createAddColumnControl() {
     const wrap = document.createElement("div");
@@ -137,11 +216,13 @@
 
     card.addEventListener("dragstart", () => {
       dragTaskId = task.id;
+      dropHandled = false;
       card.classList.add("dragging");
     });
     card.addEventListener("dragend", () => {
       dragTaskId = null;
       card.classList.remove("dragging");
+      if (!dropHandled) renderBoard();
     });
     card.addEventListener("click", () => openTaskDetail(task.id));
 
@@ -223,20 +304,30 @@
     renderBoard();
   }
 
-  async function moveTask(taskId, status) {
-    const task = tasks.find((t) => t.id === taskId);
-    if (!task || task.status === status) return;
-    const previousStatus = task.status;
-    task.status = status;
-    renderBoard();
+  async function reorderColumns(keys) {
     try {
-      await api(`/api/tasks/${taskId}`, {
-        method: "PUT",
-        body: JSON.stringify({ status }),
+      COLUMNS = await api("/api/columns/reorder", {
+        method: "POST",
+        body: JSON.stringify({ order: keys }),
       });
     } catch (err) {
       console.error(err);
-      task.status = previousStatus;
+    }
+    renderBoard();
+  }
+
+  async function moveTask(taskId, status, index) {
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+    try {
+      await api(`/api/tasks/${taskId}/move`, {
+        method: "POST",
+        body: JSON.stringify({ status, index: index ?? 0 }),
+      });
+      tasks = await api("/api/tasks");
+      renderBoard();
+    } catch (err) {
+      console.error(err);
       renderBoard();
     }
   }
@@ -714,6 +805,9 @@
   }
 
   async function deleteActiveTask() {
+    const task = tasks.find((t) => t.id === activeTaskId);
+    if (!task) return;
+    if (!confirm(`Delete the task "${task.title}"? This cannot be undone.`)) return;
     const id = activeTaskId;
     try {
       await api(`/api/tasks/${id}`, { method: "DELETE" });

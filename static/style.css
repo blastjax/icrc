@@ -328,6 +328,11 @@ a.btn-secondary {
   letter-spacing: 0.03em;
   color: var(--text-muted);
   padding: 4px 6px;
+  cursor: grab;
+}
+
+.pm-column.dragging-column {
+  opacity: 0.4;
 }
 
 .pm-column-header-right {
