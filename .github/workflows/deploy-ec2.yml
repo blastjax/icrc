@@ -24,6 +24,7 @@ jobs:
             if [ ! -f data/project_management.db ] && docker inspect icrc-contract-generator >/dev/null 2>&1; then
               docker cp icrc-contract-generator:/app/data/. ./data/ || true
             fi
+            sudo chown -R 1000:1000 data output
             docker build -t icrc-contract-generator:latest .
             docker stop icrc-contract-generator || true
             docker rm icrc-contract-generator || true
