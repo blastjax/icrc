@@ -20,10 +20,16 @@ jobs:
             set -e
             cd ${{ vars.APP_DIR }}
             git pull origin main
+            mkdir -p data output
+            if [ ! -f data/project_management.db ] && docker inspect icrc-contract-generator >/dev/null 2>&1; then
+              docker cp icrc-contract-generator:/app/data/. ./data/ || true
+            fi
             docker build -t icrc-contract-generator:latest .
             docker stop icrc-contract-generator || true
             docker rm icrc-contract-generator || true
             docker run -d --name icrc-contract-generator \
               --restart unless-stopped \
               -p 5000:5000 \
+              -v "$(pwd)/data:/app/data" \
+              -v "$(pwd)/output:/app/output" \
               icrc-contract-generator:latest
