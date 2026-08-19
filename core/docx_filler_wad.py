@@ -14,7 +14,7 @@ from __future__ import annotations
 from docx import Document
 from docx.shared import Pt
 
-from docx_utils import fill_placeholders, format_date, format_date_dmy, format_money
+from .docx_utils import fill_placeholders, format_date, format_date_dmy, format_money
 
 STAFF_PER_DIEM_PREFIX = "Staff Per Diem"
 MAX_SWA_ENTRIES = 13

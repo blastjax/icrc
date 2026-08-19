@@ -1,0 +1,80 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write   # required for OIDC role assumption
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+  CONTAINER_NAME: icrc-contract-generator
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image
+        id: build
+        env:
+          REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t "$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" -t "$REGISTRY/$ECR_REPOSITORY:latest" .
+          docker push "$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker push "$REGISTRY/$ECR_REPOSITORY:latest"
+          echo "image=$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy new image via SSM Run Command
+        env:
+          IMAGE: ${{ needs.build-and-push.outputs.image }}
+          EC2_TAG_KEY: ${{ vars.EC2_TAG_KEY }}
+          EC2_TAG_VALUE: ${{ vars.EC2_TAG_VALUE }}
+        run: |
+          COMMAND_ID=$(aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --targets "Key=tag:${EC2_TAG_KEY},Values=${EC2_TAG_VALUE}" \
+            --comment "Deploy ${IMAGE}" \
+            --parameters "{\"commands\":[
+              \"aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${IMAGE%%/*}\",
+              \"docker pull ${IMAGE}\",
+              \"docker stop ${CONTAINER_NAME} || true\",
+              \"docker rm ${CONTAINER_NAME} || true\",
+              \"docker run -d --name ${CONTAINER_NAME} --restart unless-stopped -p 5000:5000 ${IMAGE}\"
+            ]}" \
+            --query "Command.CommandId" --output text)
+
+          aws ssm wait command-executed \
+            --command-id "$COMMAND_ID" \
+            --instance-id "$(aws ec2 describe-instances \
+              --filters "Name=tag:${EC2_TAG_KEY},Values=${EC2_TAG_VALUE}" "Name=instance-state-name,Values=running" \
+              --query 'Reservations[0].Instances[0].InstanceId' --output text)"

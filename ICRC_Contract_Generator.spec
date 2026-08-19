@@ -8,8 +8,7 @@ a = Analysis(
     datas=[
         ('templates', 'templates'),
         ('static', 'static'),
-        ('Contract for Works Template.docx', '.'),
-        ('WAD Template.docx', '.'),
+        ('docx_templates', 'docx_templates'),
     ],
     hiddenimports=[],
     hookspath=[],

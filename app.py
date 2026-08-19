@@ -6,11 +6,11 @@ import webbrowser
 
 from flask import Flask, render_template, request, send_file, jsonify
 
-from docx_filler import fill_template, REQUIRED_FIELDS
-from docx_filler_wad import fill_template_wad
-import boq_import
-import pm_db
-import progress_export
+from core.docx_filler import fill_template, REQUIRED_FIELDS
+from core.docx_filler_wad import fill_template_wad
+from core import boq_import
+from core import pm_db
+from core import progress_export
 
 
 def resource_path(*parts: str) -> str:
@@ -29,8 +29,8 @@ def app_dir() -> str:
     return os.path.dirname(os.path.abspath(__file__))
 
 
-TEMPLATE_PATH = resource_path("Contract for Works Template.docx")
-TEMPLATE_PATH_WAD = resource_path("WAD Template.docx")
+TEMPLATE_PATH = resource_path("docx_templates", "Contract for Works Template.docx")
+TEMPLATE_PATH_WAD = resource_path("docx_templates", "WAD Template.docx")
 OUTPUT_DIR = os.path.join(app_dir(), "output")
 DATA_DIR = os.path.join(app_dir(), "data")
 

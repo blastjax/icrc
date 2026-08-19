@@ -6,3 +6,8 @@ dist
 output
 data
 .git
+.claude
+*.spec
+version_info.txt
+Run ICRC Contract Generator.bat
+README.md

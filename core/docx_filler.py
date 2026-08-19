@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from docx import Document
 
-from docx_utils import fill_placeholders, format_date, format_money
+from .docx_utils import fill_placeholders, format_date, format_money
 
 # Fields the caller must supply.
 REQUIRED_FIELDS = [
