@@ -3,6 +3,7 @@ import re
 import sys
 import threading
 import webbrowser
+from datetime import date
 
 from flask import Flask, render_template, request, send_file, jsonify
 
@@ -340,7 +341,7 @@ def api_export_progress_excel(project_id):
     weeks = pm_db.list_progress_weeks(project_id)
     items = pm_db.list_progress_items(project_id)
     buf = progress_export.build_excel(project, weeks, items)
-    filename = f"{_safe_filename(project['name'])}_Progress_Tracker.xlsx"
+    filename = f"{_safe_filename(project['name'])}_Progress_{date.today().strftime('%d %B %Y')}.xlsx"
     return send_file(
         buf,
         as_attachment=True,
@@ -357,7 +358,7 @@ def api_export_progress_pdf(project_id):
     weeks = pm_db.list_progress_weeks(project_id)
     items = pm_db.list_progress_items(project_id)
     buf = progress_export.build_pdf(project, weeks, items)
-    filename = f"{_safe_filename(project['name'])}_Progress_Tracker.pdf"
+    filename = f"{_safe_filename(project['name'])}_Progress_{date.today().strftime('%d %B %Y')}.pdf"
     return send_file(
         buf,
         as_attachment=True,
