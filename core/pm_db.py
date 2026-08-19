@@ -580,13 +580,42 @@ def delete_payment_row(row_id: str) -> bool:
         return cur.rowcount > 0
 
 
+def _project_completion_percent(conn: sqlite3.Connection, project_id: str) -> float:
+    """Same math as the per-project page's overall completion card: the
+    latest week's weighted-to-date cost (Progress % / 100 * % Project Cost,
+    summed over leaf items — level 2) divided by the total % Project Cost.
+    Not summed across every week, since each week's entry is already
+    cumulative-to-date, not a delta."""
+    latest_week = conn.execute(
+        "SELECT id FROM progress_weeks WHERE project_id = ? ORDER BY position DESC LIMIT 1", (project_id,)
+    ).fetchone()
+    total_cost = conn.execute(
+        "SELECT COALESCE(SUM(project_cost_percent), 0) FROM progress_items WHERE project_id = ? AND level = 2",
+        (project_id,),
+    ).fetchone()[0]
+    if not total_cost:
+        return 0.0
+    weighted_done = conn.execute(
+        """SELECT COALESCE(SUM(pi.project_cost_percent * COALESCE(pe.progress_percent, 0) / 100.0), 0)
+           FROM progress_items pi
+           LEFT JOIN progress_entries pe ON pe.item_id = pi.id AND pe.week_id = ?
+           WHERE pi.project_id = ? AND pi.level = 2""",
+        (latest_week["id"] if latest_week else None, project_id),
+    ).fetchone()[0]
+    return (weighted_done / total_cost) * 100
+
+
 def list_progress_projects() -> list[dict]:
     """Alphabetical by name — each project is a fully separate tracker
     (its own categories, items, weeks, and entries), so there's no manual
-    ordering to preserve."""
+    ordering to preserve. Each project dict also carries a
+    `completion_percent`, for the project-list cards."""
     with _connect() as conn:
         rows = conn.execute("SELECT * FROM progress_projects ORDER BY name COLLATE NOCASE").fetchall()
-        return [dict(row) for row in rows]
+        projects = [dict(row) for row in rows]
+        for project in projects:
+            project["completion_percent"] = _project_completion_percent(conn, project["id"])
+        return projects
 
 
 def get_progress_project(project_id: str) -> dict | None:

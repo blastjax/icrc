@@ -4,6 +4,7 @@
    the server (pm_db.list_progress_projects). */
 (function () {
   const container = document.getElementById("pt-projects");
+  const actionsEl = document.getElementById("pt-project-actions");
 
   async function api(url, options) {
     const res = await fetch(url, {
@@ -17,33 +18,75 @@
     return res.json();
   }
 
+  // Mirrors severityFor() in progress_tracker.js — kept as its own small
+  // copy here since this page never loads that file.
+  function severityFor(percent) {
+    if (percent >= 80) return { tone: "good", label: "Nearly complete" };
+    if (percent >= 40) return { tone: "warning", label: "In progress" };
+    if (percent > 0) return { tone: "critical", label: "Just started" };
+    return { tone: "none", label: "Not started" };
+  }
+
+  function buildMeter(tone, clamped) {
+    const meter = document.createElement("div");
+    meter.className = "pt-card-meter";
+    const fill = document.createElement("div");
+    fill.className = `pt-card-meter-fill pt-card-meter-fill-${tone}`;
+    fill.style.width = `${clamped}%`;
+    meter.appendChild(fill);
+    return meter;
+  }
+
+  function buildProjectCard(project) {
+    const link = document.createElement("a");
+    link.className = "pt-project-card";
+    link.href = `/progress-tracker/${project.id}`;
+
+    const name = document.createElement("div");
+    name.className = "pt-project-card-name";
+    name.textContent = project.name;
+    link.appendChild(name);
+
+    const percent = Number(project.completion_percent) || 0;
+    const clamped = Math.min(100, Math.max(0, percent));
+    const severity = severityFor(percent);
+
+    const value = document.createElement("div");
+    value.className = "pt-project-card-value";
+    value.textContent = `${Math.round(clamped)}%`;
+    link.appendChild(value);
+
+    link.appendChild(buildMeter(severity.tone, clamped));
+
+    const status = document.createElement("span");
+    status.className = `pt-card-status pt-card-status-${severity.tone}`;
+    status.textContent = severity.label;
+    link.appendChild(status);
+
+    return link;
+  }
+
   function renderProjects(projects) {
     container.innerHTML = "";
     projects.forEach((project) => {
-      const link = document.createElement("a");
-      link.className = "pt-project-card";
-      link.href = `/progress-tracker/${project.id}`;
-      link.textContent = project.name;
-      container.appendChild(link);
+      container.appendChild(buildProjectCard(project));
     });
-    container.appendChild(createAddProjectControl());
   }
 
-  function createAddProjectControl() {
-    const wrap = document.createElement("div");
-    wrap.className = "pt-add-project";
+  function renderAddProjectControl() {
+    actionsEl.innerHTML = "";
 
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "pt-add-project-btn";
+    btn.className = "btn-primary";
     btn.textContent = "+ New Project";
     btn.addEventListener("click", () => {
-      wrap.innerHTML = "";
+      actionsEl.innerHTML = "";
       const input = document.createElement("input");
       input.type = "text";
-      input.className = "pt-add-project-input";
+      input.className = "pt-input pt-project-add-input";
       input.placeholder = "Project name";
-      wrap.appendChild(input);
+      actionsEl.appendChild(input);
       input.focus();
 
       let done = false;
@@ -52,7 +95,7 @@
         done = true;
         const name = input.value.trim();
         if (!name) {
-          init();
+          renderAddProjectControl();
           return;
         }
         try {
@@ -63,7 +106,7 @@
           window.location.href = `/progress-tracker/${project.id}`;
         } catch (err) {
           console.error(err);
-          init();
+          renderAddProjectControl();
         }
       };
       input.addEventListener("blur", commit);
@@ -73,13 +116,12 @@
           input.blur();
         } else if (e.key === "Escape") {
           done = true;
-          init();
+          renderAddProjectControl();
         }
       });
     });
 
-    wrap.appendChild(btn);
-    return wrap;
+    actionsEl.appendChild(btn);
   }
 
   async function init() {
@@ -92,5 +134,6 @@
     renderProjects(projects);
   }
 
+  renderAddProjectControl();
   init();
 })();

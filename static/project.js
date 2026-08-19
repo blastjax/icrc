@@ -72,6 +72,7 @@
 
   function renderBoard() {
     board.innerHTML = "";
+    board.classList.toggle("pm-board--fit", COLUMNS.length > 0 && COLUMNS.length <= 5);
     COLUMNS.forEach((col) => {
       const colEl = document.createElement("div");
       colEl.className = "pm-column";
@@ -139,8 +140,6 @@
 
       board.appendChild(colEl);
     });
-
-    board.appendChild(createAddColumnControl());
   }
 
   board.addEventListener("dragover", (e) => {
@@ -150,7 +149,7 @@
     if (!dragging) return;
     const afterElement = getColumnAfterElement(board, e.clientX);
     if (afterElement == null) {
-      board.insertBefore(dragging, board.querySelector(".pm-add-column"));
+      board.appendChild(dragging);
     } else if (afterElement !== dragging) {
       board.insertBefore(dragging, afterElement);
     }
@@ -163,48 +162,35 @@
     reorderColumns(keys);
   });
 
-  function createAddColumnControl() {
-    const wrap = document.createElement("div");
-    wrap.className = "pm-add-column";
+  function startAddColumn() {
+    const addColumnBtn = document.getElementById("pm-add-column-btn");
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "pm-add-column-input-inline";
+    input.placeholder = "Column name";
+    addColumnBtn.replaceWith(input);
+    input.focus();
 
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "pm-add-column-btn";
-    btn.textContent = "+ Add column";
-    btn.addEventListener("click", () => {
-      wrap.innerHTML = "";
-      const input = document.createElement("input");
-      input.type = "text";
-      input.className = "pm-add-column-input";
-      input.placeholder = "Column name";
-      wrap.appendChild(input);
-      input.focus();
-
-      let done = false;
-      const commit = async () => {
-        if (done) return;
+    let done = false;
+    const commit = async () => {
+      if (done) return;
+      done = true;
+      const title = input.value.trim();
+      input.replaceWith(addColumnBtn);
+      if (title) {
+        await createColumn(title);
+      }
+    };
+    input.addEventListener("blur", commit);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        input.blur();
+      } else if (e.key === "Escape") {
         done = true;
-        const title = input.value.trim();
-        if (title) {
-          await createColumn(title);
-        } else {
-          renderBoard();
-        }
-      };
-      input.addEventListener("blur", commit);
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          input.blur();
-        } else if (e.key === "Escape") {
-          done = true;
-          renderBoard();
-        }
-      });
+        input.replaceWith(addColumnBtn);
+      }
     });
-
-    wrap.appendChild(btn);
-    return wrap;
   }
 
   function createTaskCard(task) {
@@ -879,6 +865,7 @@
     });
   });
 
+  document.getElementById("pm-add-column-btn").addEventListener("click", startAddColumn);
   document.getElementById("pm-add-task-btn").addEventListener("click", () => addTask());
   document.getElementById("pm-modal-close").addEventListener("click", closeModal);
   document.getElementById("pm-save-task-btn").addEventListener("click", saveActiveTask);
