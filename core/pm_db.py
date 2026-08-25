@@ -747,16 +747,29 @@ def _attach_progress_entries(conn: sqlite3.Connection, item: dict) -> dict:
     return item
 
 
+_CODE_SPLIT_RE = re.compile(r"(\d+)")
+
+
+def _natural_code_key(code: str) -> tuple:
+    """Splits a code like 'A1.10' into ('a', 1, '.', 10, '') so numeric runs
+    sort by value (A9 < A10 < A20) instead of lexicographically."""
+    parts = _CODE_SPLIT_RE.split((code or "").strip().lower())
+    return tuple(int(part) if part.isdigit() else part for part in parts)
+
+
 def list_progress_items(project_id: str) -> list[dict]:
     """Alphabetical by Item code (e.g. A, A1, A2, B, BS1, BS2 — a category's
     code is always a prefix of its children's, so this also reconstructs the
-    right BOQ grouping). `position` is only a tiebreak for equal/blank codes."""
+    right BOQ grouping), with numeric runs sorted by value rather than as
+    text. `position` is only a tiebreak for equal/blank codes."""
     with _connect() as conn:
         rows = conn.execute(
-            "SELECT * FROM progress_items WHERE project_id = ? ORDER BY code COLLATE NOCASE, position",
+            "SELECT * FROM progress_items WHERE project_id = ?",
             (project_id,),
         ).fetchall()
-        return [_attach_progress_entries(conn, dict(row)) for row in rows]
+        items = [_attach_progress_entries(conn, dict(row)) for row in rows]
+        items.sort(key=lambda item: (_natural_code_key(item["code"]), item["position"]))
+        return items
 
 
 def create_progress_item(project_id: str, level: int = 2) -> dict:

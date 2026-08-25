@@ -4,9 +4,10 @@
    Quantity / % Project Cost / weekly progress data ("A1 Mobilization and
    Demobilization"). Category and subcategory rows only ever show Item +
    Item Description; every other column stays blank for them. Rows are kept
-   in alphabetical order by Item code (so "A" sorts before "A1"/"A2", which
-   sort before "B", which sorts before "BS1"/"BS2" — a code is always a
-   prefix of its children's).
+   in natural order by Item code (so "A" sorts before "A1"/"A2"/"A9"/"A10"/
+   "A20", which sort before "B", which sorts before "BS1"/"BS2" — a code is
+   always a prefix of its children's, and numeric runs sort by value rather
+   than as text).
 
    As many "Week N Progress %" columns as needed can be added, each labeled
    with its own date range. A "Total" column sums, per row, (Week n / 100 *
@@ -768,11 +769,31 @@
     items.forEach((item) => body.appendChild(createItemRow(item)));
   }
 
+  // Compares codes the way the server does: split into text/number runs so
+  // numbers sort by value (A9 < A10 < A20, A1.9 < A1.10 < A1.20) instead of
+  // as plain text, while a category's code ("A") still sorts right before
+  // its children ("A1", "A2") and right after the previous group ("B"
+  // before "BS1", "BS2").
+  function compareCodes(a, b) {
+    const pa = String(a || "").trim().toLowerCase().split(/(\d+)/);
+    const pb = String(b || "").trim().toLowerCase().split(/(\d+)/);
+    const len = Math.max(pa.length, pb.length);
+    for (let i = 0; i < len; i++) {
+      const x = pa[i] ?? "";
+      const y = pb[i] ?? "";
+      if (x === y) continue;
+      if (i % 2 === 1) {
+        const diff = parseInt(x || "0", 10) - parseInt(y || "0", 10);
+        if (diff !== 0) return diff;
+        continue;
+      }
+      return x < y ? -1 : 1;
+    }
+    return 0;
+  }
+
   function sortItems() {
-    // Mirrors the server's ORDER BY code COLLATE NOCASE, so a category's
-    // code (e.g. "A") sorts right before its children ("A1", "A2") and
-    // right after the previous group ("B" before "BS1", "BS2").
-    items.sort((a, b) => (a.code || "").localeCompare(b.code || "", undefined, { sensitivity: "base" }));
+    items.sort((a, b) => compareCodes(a.code, b.code));
   }
 
   async function addItem(level) {
