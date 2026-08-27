@@ -189,7 +189,8 @@ label {
 input[type="text"],
 input[type="date"],
 input[type="tel"],
-input[type="email"] {
+input[type="email"],
+input[type="password"] {
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -1311,4 +1312,38 @@ a.btn-secondary {
     flex-direction: row;
     overflow-x: auto;
   }
+}
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 360px;
+}
+
+.login-title {
+  margin: 0 0 20px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.login-error {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--error-bg);
+  color: var(--error-text);
+  font-size: 13px;
+}
+
+.login-submit {
+  width: 100%;
+  margin-top: 8px;
 }

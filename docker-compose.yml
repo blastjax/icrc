@@ -5,6 +5,15 @@ services:
     # No host port publish in production - only reachable through Caddy
     # (see below). Local dev can still hit it directly with:
     #   docker compose run --service-ports web
+    # APP_USERNAME/APP_PASSWORD/SECRET_KEY come from a .env file the deploy
+    # workflow writes from GitHub secrets - not committed to the repo. Using
+    # substitution (not env_file:) so this also works with no .env present
+    # at all, which is the case for local dev (login is then skipped
+    # entirely - see app.py).
+    environment:
+      APP_USERNAME: ${APP_USERNAME:-}
+      APP_PASSWORD: ${APP_PASSWORD:-}
+      SECRET_KEY: ${SECRET_KEY:-}
     volumes:
       - ./output:/app/output
       - ./data:/app/data

@@ -41,6 +41,16 @@ jobs:
           git config --system --add safe.directory ${{ vars.APP_DIR }}
           git pull origin main
           mkdir -p data output
+
+          # Login credentials for the site, and the Flask session signing
+          # key - kept out of the repo, only ever written to this file on
+          # the host. chmod so only root/owner can read it.
+          cat > .env <<'ENVEOF'
+          APP_USERNAME=${{ secrets.APP_USERNAME }}
+          APP_PASSWORD=${{ secrets.APP_PASSWORD }}
+          SECRET_KEY=${{ secrets.APP_SECRET_KEY }}
+          ENVEOF
+          chmod 600 .env
           if [ ! -f data/project_management.db ] && docker inspect icrc-contract-generator >/dev/null 2>&1; then
             docker cp icrc-contract-generator:/app/data/. ./data/ || true
           fi

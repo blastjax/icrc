@@ -1,3 +1,4 @@
+import hmac
 import os
 import re
 import sys
@@ -5,7 +6,7 @@ import threading
 import webbrowser
 from datetime import date
 
-from flask import Flask, render_template, request, send_file, jsonify
+from flask import Flask, render_template, request, send_file, jsonify, redirect, session, url_for
 
 from core.docx_filler import fill_template, REQUIRED_FIELDS
 from core.docx_filler_wad import fill_template_wad
@@ -45,6 +46,52 @@ app = Flask(
     template_folder=resource_path("templates"),
     static_folder=resource_path("static"),
 )
+
+# Falls back to a per-process random key so restarting the container (e.g.
+# on every deploy) also invalidates existing sessions, forcing a fresh login.
+app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(32)
+
+APP_USERNAME = os.environ.get("APP_USERNAME")
+APP_PASSWORD = os.environ.get("APP_PASSWORD")
+
+
+def _check_credentials(username: str, password: str) -> bool:
+    return hmac.compare_digest(username, APP_USERNAME) and hmac.compare_digest(password, APP_PASSWORD)
+
+
+@app.before_request
+def _require_login():
+    # Auth is only enforced when both credentials are configured, so local
+    # dev (no env vars set) keeps working without a login step.
+    if not APP_USERNAME or not APP_PASSWORD:
+        return None
+    if request.endpoint in ("login", "static"):
+        return None
+    if session.get("authenticated"):
+        return None
+    return redirect(url_for("login", next=request.path))
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if not APP_USERNAME or not APP_PASSWORD:
+        return redirect(url_for("index"))
+    error = None
+    if request.method == "POST":
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+        if _check_credentials(username, password):
+            # No session.permanent = True, so this is a session cookie -
+            # browsers drop it on full browser close, prompting login again.
+            session["authenticated"] = True
+            next_path = request.form.get("next") or ""
+            # Only follow same-site relative paths - anything else (a
+            # protocol-relative or absolute URL) risks an open redirect.
+            if not next_path.startswith("/") or next_path.startswith("//"):
+                next_path = url_for("index")
+            return redirect(next_path)
+        error = "Invalid username or password."
+    return render_template("login.html", error=error, next=request.args.get("next", ""))
 
 
 def _safe_filename(name: str) -> str:
