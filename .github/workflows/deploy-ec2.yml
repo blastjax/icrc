@@ -2,7 +2,7 @@ name: Deploy to EC2
 
 on:
   push:
-    branches: [agca]
+    branches: [main]
   workflow_dispatch: {}
 
 jobs:
@@ -25,12 +25,47 @@ jobs:
               docker cp icrc-contract-generator:/app/data/. ./data/ || true
             fi
             sudo chown -R 1000:1000 data output
-            docker build -t icrc-contract-generator:latest .
-            docker stop icrc-contract-generator || true
-            docker rm icrc-contract-generator || true
-            docker run -d --name icrc-contract-generator \
-              --restart unless-stopped \
-              -p 80:5000 \
-              -v "$(pwd)/data:/app/data" \
-              -v "$(pwd)/output:/app/output" \
-              icrc-contract-generator:latest
+
+            # One-time migration off the old raw `docker run` deployment
+            # (replaced by docker compose + Caddy for HTTPS) - stop/remove
+            # it so compose can bind host port 80/443 without a conflict.
+            docker stop icrc-contract-generator 2>/dev/null || true
+            docker rm icrc-contract-generator 2>/dev/null || true
+
+            docker compose up -d --build
+            docker image prune -f
+
+            # Fail the job if the app doesn't come up, so a red check means
+            # "not deployed" rather than "deployed and broken".
+            cid=$(docker compose ps -q web)
+            if [ -z "$cid" ]; then
+              echo "web container is not running" >&2
+              docker compose logs --tail 50 web >&2 || true
+              exit 1
+            fi
+            healthy=""
+            for _ in $(seq 1 40); do
+              status=$(docker inspect -f '{{.State.Health.Status}}' "$cid" 2>/dev/null || echo unknown)
+              if [ "$status" = "healthy" ]; then
+                healthy=1
+                break
+              fi
+              sleep 5
+            done
+            if [ -z "$healthy" ]; then
+              echo "web did not become healthy (last status: ${status:-unknown})" >&2
+              docker compose logs --tail 50 web >&2 || true
+              exit 1
+            fi
+            echo "web is healthy"
+
+            # Caddy has no HEALTHCHECK of its own - just confirm it's
+            # actually running (not exited on a config/bind error).
+            sleep 3
+            caddy_cid=$(docker compose ps -q caddy)
+            if [ -z "$caddy_cid" ] || [ "$(docker inspect -f '{{.State.Running}}' "$caddy_cid")" != "true" ]; then
+              echo "caddy container is not running" >&2
+              docker compose logs --tail 50 caddy >&2 || true
+              exit 1
+            fi
+            echo "caddy is running"

@@ -1,0 +1,4 @@
+maiacruz.com {
+	encode gzip
+	reverse_proxy web:5000
+}

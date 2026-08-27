@@ -1,9 +1,39 @@
 services:
   web:
     build: .
-    ports:
-      - "3001:5000"
+    restart: always
+    # No host port publish in production - only reachable through Caddy
+    # (see below). Local dev can still hit it directly with:
+    #   docker compose run --service-ports web
     volumes:
       - ./output:/app/output
       - ./data:/app/data
+    healthcheck:
+      test:
+        - "CMD"
+        - "python"
+        - "-c"
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:5000/', timeout=4).status == 200 else 1)"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+  caddy:
     restart: always
+    image: caddy:2-alpine
+    # Sole public entry point: terminates TLS (auto-provisions and renews
+    # the Let's Encrypt cert for the domain in the Caddyfile).
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web:
+        condition: service_healthy
+
+volumes:
+  caddy_data:
+  caddy_config:
