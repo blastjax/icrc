@@ -8,64 +8,118 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    # One deploy at a time; queue rather than cancel so a run that already
+    # started updating the host is never interrupted half-way.
+    concurrency:
+      group: deploy-ec2
+      cancel-in-progress: false
     steps:
-      - name: Deploy over SSH
-        uses: appleboy/ssh-action@v1.0.3
+      # Direct SSH from GitHub-hosted (Azure) runners to this host times out
+      # at the TCP level for reasons invisible on either side (SG/NACL wide
+      # open, no host firewall, instance healthy - same issue seen on
+      # blastjax's sibling instance). SSM runs over HTTPS through AWS's own
+      # endpoints instead of a public port-22 connection, so it isn't
+      # subject to whatever was dropping that path.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: ${{ vars.EC2_SSH_PORT || 22 }}
-          script: |
-            set -e
-            cd ${{ vars.APP_DIR }}
-            git pull origin main
-            mkdir -p data output
-            if [ ! -f data/project_management.db ] && docker inspect icrc-contract-generator >/dev/null 2>&1; then
-              docker cp icrc-contract-generator:/app/data/. ./data/ || true
-            fi
-            sudo chown -R 1000:1000 data output
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
 
-            # One-time migration off the old raw `docker run` deployment
-            # (replaced by docker compose + Caddy for HTTPS) - stop/remove
-            # it so compose can bind host port 80/443 without a conflict.
-            docker stop icrc-contract-generator 2>/dev/null || true
-            docker rm icrc-contract-generator 2>/dev/null || true
+      - name: Deploy via SSM
+        run: |
+          cat > /tmp/deploy.sh <<'SCRIPT'
+          set -e
+          cd ${{ vars.APP_DIR }}
 
-            docker compose up -d --build
-            docker image prune -f
+          # SSM runs this as root, but the repo is owned by the box's normal
+          # deploy user - without this, git refuses to touch a repo it
+          # doesn't own (CVE-2022-24765 mitigation). --system instead of
+          # --global since $HOME isn't set in the SSM execution environment.
+          git config --system --add safe.directory ${{ vars.APP_DIR }}
+          git pull origin main
+          mkdir -p data output
+          if [ ! -f data/project_management.db ] && docker inspect icrc-contract-generator >/dev/null 2>&1; then
+            docker cp icrc-contract-generator:/app/data/. ./data/ || true
+          fi
+          chown -R 1000:1000 data output
 
-            # Fail the job if the app doesn't come up, so a red check means
-            # "not deployed" rather than "deployed and broken".
-            cid=$(docker compose ps -q web)
-            if [ -z "$cid" ]; then
-              echo "web container is not running" >&2
-              docker compose logs --tail 50 web >&2 || true
-              exit 1
-            fi
-            healthy=""
-            for _ in $(seq 1 40); do
-              status=$(docker inspect -f '{{.State.Health.Status}}' "$cid" 2>/dev/null || echo unknown)
-              if [ "$status" = "healthy" ]; then
-                healthy=1
-                break
-              fi
-              sleep 5
-            done
-            if [ -z "$healthy" ]; then
-              echo "web did not become healthy (last status: ${status:-unknown})" >&2
-              docker compose logs --tail 50 web >&2 || true
-              exit 1
-            fi
-            echo "web is healthy"
+          # One-time migration off the old raw `docker run` deployment
+          # (replaced by docker compose + Caddy for HTTPS) - stop/remove
+          # it so compose can bind host port 80/443 without a conflict.
+          docker stop icrc-contract-generator 2>/dev/null || true
+          docker rm icrc-contract-generator 2>/dev/null || true
 
-            # Caddy has no HEALTHCHECK of its own - just confirm it's
-            # actually running (not exited on a config/bind error).
-            sleep 3
-            caddy_cid=$(docker compose ps -q caddy)
-            if [ -z "$caddy_cid" ] || [ "$(docker inspect -f '{{.State.Running}}' "$caddy_cid")" != "true" ]; then
-              echo "caddy container is not running" >&2
-              docker compose logs --tail 50 caddy >&2 || true
-              exit 1
+          docker compose up -d --build
+          docker image prune -f
+
+          # Fail the job if the app doesn't come up, so a red check means
+          # "not deployed" rather than "deployed and broken".
+          cid=$(docker compose ps -q web)
+          if [ -z "$cid" ]; then
+            echo "web container is not running" >&2
+            docker compose logs --tail 50 web >&2 || true
+            exit 1
+          fi
+          healthy=""
+          for _ in $(seq 1 40); do
+            status=$(docker inspect -f '{{.State.Health.Status}}' "$cid" 2>/dev/null || echo unknown)
+            if [ "$status" = "healthy" ]; then
+              healthy=1
+              break
             fi
-            echo "caddy is running"
+            sleep 5
+          done
+          if [ -z "$healthy" ]; then
+            echo "web did not become healthy (last status: ${status:-unknown})" >&2
+            docker compose logs --tail 50 web >&2 || true
+            exit 1
+          fi
+          echo "web is healthy"
+
+          # Caddy has no HEALTHCHECK of its own - just confirm it's
+          # actually running (not exited on a config/bind error).
+          sleep 3
+          caddy_cid=$(docker compose ps -q caddy)
+          if [ -z "$caddy_cid" ] || [ "$(docker inspect -f '{{.State.Running}}' "$caddy_cid")" != "true" ]; then
+            echo "caddy container is not running" >&2
+            docker compose logs --tail 50 caddy >&2 || true
+            exit 1
+          fi
+          echo "caddy is running"
+          SCRIPT
+
+          jq -Rs '{"commands": [.]}' /tmp/deploy.sh > /tmp/ssm-params.json
+
+          CMD_ID=$(aws ssm send-command \
+            --instance-ids "${{ vars.EC2_INSTANCE_ID }}" \
+            --document-name "AWS-RunShellScript" \
+            --parameters file:///tmp/ssm-params.json \
+            --timeout-seconds 1800 \
+            --query "Command.CommandId" --output text)
+          echo "SSM CommandId: $CMD_ID"
+
+          # Poll for up to 30 minutes.
+          STATUS="Pending"
+          for _ in $(seq 1 180); do
+            STATUS=$(aws ssm get-command-invocation \
+              --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" \
+              --query "Status" --output text 2>/dev/null || echo "Pending")
+            case "$STATUS" in
+              Success|Failed|Cancelled|TimedOut) break ;;
+            esac
+            sleep 10
+          done
+
+          echo "Final status: $STATUS"
+          echo "--- stdout ---"
+          aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" --query "StandardOutputContent" --output text
+          echo "--- stderr ---"
+          aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" --query "StandardErrorContent" --output text
+
+          if [ "$STATUS" != "Success" ]; then
+            echo "Deploy command finished with status: $STATUS" >&2
+            exit 1
+          fi
