@@ -17,7 +17,11 @@
 
    Rows and week columns are read-only text until double-clicked; double-click
    turns them into inputs (to edit) and reveals a Delete control (to remove
-   them). Clicking anywhere outside the row/header being edited commits;
+   them), plus a Category/Subcategory/Item dropdown to move the row between
+   levels — switching it rebuilds the Unit/Qty/Cost/week cells on the spot
+   (blank <-> real inputs) without touching `item.level` itself until commit,
+   so Escape/outside-click-cancel still discards the change like any other
+   edit. Clicking anywhere outside the row/header being edited commits;
    Escape cancels. (Clicks elsewhere *inside* the same row/header — including
    on cells with no input, like the blank cells on a category row — must NOT
    count as "outside", or double-clicking would flicker in and out of edit
@@ -159,7 +163,7 @@
     return items.reduce((sum, item) => sum + (item.level === LEVEL_ITEM ? (item.project_cost_percent || 0) : 0), 0);
   }
 
-  function renderFoot() {
+  function renderFootRow() {
     footRow.innerHTML = "";
 
     const labelTd = document.createElement("td");
@@ -181,7 +185,19 @@
     });
 
     footRow.appendChild(document.createElement("td")); // actions column spacer
+  }
 
+  // Full refresh: the tfoot TOTAL row, the overall-completion banner, and
+  // every category card. Card buttons and the overall banner get torn down
+  // and rebuilt from scratch here, which is fine for the structural changes
+  // (commit, delete, add/remove week, moving a row between levels) that call
+  // this — but doing it on every keystroke while someone is mid-edit yanks
+  // the page's scroll position around (the cards sit above the table, so
+  // replacing them mid-scroll fights the browser's own scroll anchoring).
+  // Live typing in a cost/week field should use `renderFootRow()` alone
+  // instead — see `recomputeWeighted` below.
+  function renderFoot() {
+    renderFootRow();
     renderOverall();
     renderCards();
   }
@@ -615,57 +631,34 @@
     tr.innerHTML = "";
     tr.classList.add("pt-editing");
 
-    const codeInput = makeInput(item.code, codePlaceholderFor(item.level));
-    const descInput = makeInput(item.description, descPlaceholderFor(item.level));
+    // The row's level can be changed mid-edit (that's how a row is moved
+    // between Category / Subcategory / Item), so it's tracked separately
+    // from `item.level` until commit, and the Unit/Qty/Cost/week cells are
+    // torn down and rebuilt to match whenever it changes.
+    let currentLevel = item.level;
+
+    const codeInput = makeInput(item.code, codePlaceholderFor(currentLevel));
+    const descInput = makeInput(item.description, descPlaceholderFor(currentLevel));
     tr.appendChild(wrapTd(codeInput));
     tr.appendChild(wrapTd(descInput));
 
-    let unitInput = null;
-    let qtyInput = null;
-    let costInput = null;
-    const weekInputs = {};
-
-    if (item.level === LEVEL_ITEM) {
-      unitInput = makeInput(item.unit, "unit");
-      qtyInput = makeInput(formatNumber(item.suggested_quantity), "0", true);
-      costInput = makeInput(formatNumber(item.project_cost_percent), "0", true);
-      tr.appendChild(wrapTd(unitInput));
-      tr.appendChild(wrapTd(qtyInput));
-      tr.appendChild(wrapTd(costInput));
-
-      const weekCellWraps = {};
-      weeks.forEach((week) => {
-        const input = makeInput(formatNumber(item.entries ? item.entries[week.id] : 0), "0", true);
-        weekInputs[week.id] = input;
-        const wrap = buildWeekCell(input, computeWeekContribution(item, week));
-        weekCellWraps[week.id] = wrap;
-        const td = document.createElement("td");
-        td.appendChild(wrap);
-        tr.appendChild(td);
-      });
-
-      const recomputeWeighted = () => {
-        const cost = parseNumber(costInput.value);
-        weeks.forEach((week) => {
-          const input = weekInputs[week.id];
-          const percent = input ? parseNumber(input.value) : 0;
-          const weighted = (percent / 100) * cost;
-          weekCellWraps[week.id].computedEl.textContent = `(${formatTotal(weighted)})`;
-        });
-        renderFoot();
-      };
-
-      costInput.addEventListener("input", recomputeWeighted);
-      Object.values(weekInputs).forEach((input) => input.addEventListener("input", recomputeWeighted));
-      recomputeWeighted();
-    } else {
-      tr.appendChild(document.createElement("td"));
-      tr.appendChild(document.createElement("td"));
-      tr.appendChild(document.createElement("td"));
-      weeks.forEach(() => tr.appendChild(document.createElement("td")));
-    }
-
     const actionsTd = document.createElement("td");
+    const levelSelect = document.createElement("select");
+    levelSelect.className = "pt-level-select";
+    levelSelect.title = "Move to Category / Subcategory / Item";
+    [
+      [LEVEL_CATEGORY, "Category"],
+      [LEVEL_SUBCATEGORY, "Subcategory"],
+      [LEVEL_ITEM, "Item"],
+    ].forEach(([value, label]) => {
+      const opt = document.createElement("option");
+      opt.value = String(value);
+      opt.textContent = label;
+      levelSelect.appendChild(opt);
+    });
+    levelSelect.value = String(currentLevel);
+    actionsTd.appendChild(levelSelect);
+
     const deleteBtn = document.createElement("button");
     deleteBtn.type = "button";
     deleteBtn.className = "pt-row-delete";
@@ -673,7 +666,95 @@
     actionsTd.appendChild(deleteBtn);
     tr.appendChild(actionsTd);
 
-    const allInputs = [codeInput, descInput, unitInput, qtyInput, costInput, ...Object.values(weekInputs)].filter(Boolean);
+    let unitInput = null;
+    let qtyInput = null;
+    let costInput = null;
+    let weekInputs = {};
+    const levelCells = [];
+
+    // (Re)builds the Unit/Qty/Cost/week cells for `currentLevel`, inserting
+    // them just before the actions cell. Safe to call again after
+    // `currentLevel` changes — it clears out whatever it built last time.
+    function buildLevelCells() {
+      levelCells.splice(0).forEach((td) => td.remove());
+      unitInput = null;
+      qtyInput = null;
+      costInput = null;
+      weekInputs = {};
+
+      if (currentLevel === LEVEL_ITEM) {
+        unitInput = makeInput(item.unit, "unit");
+        qtyInput = makeInput(formatNumber(item.suggested_quantity), "0", true);
+        costInput = makeInput(formatNumber(item.project_cost_percent), "0", true);
+        [unitInput, qtyInput, costInput].forEach((input) => {
+          const td = wrapTd(input);
+          tr.insertBefore(td, actionsTd);
+          levelCells.push(td);
+        });
+
+        const weekCellWraps = {};
+        weeks.forEach((week) => {
+          const input = makeInput(formatNumber(item.entries ? item.entries[week.id] : 0), "0", true);
+          weekInputs[week.id] = input;
+          const wrap = buildWeekCell(input, computeWeekContribution(item, week));
+          weekCellWraps[week.id] = wrap;
+          const td = document.createElement("td");
+          td.appendChild(wrap);
+          tr.insertBefore(td, actionsTd);
+          levelCells.push(td);
+        });
+
+        // Updates only this row's own (Week n / 100 * Cost) preview spans as
+        // the user types. It intentionally does NOT touch the footer TOTAL
+        // row, the overall banner, or the cards — those all total up from
+        // `items`, which doesn't reflect a keystroke until commit, so
+        // refreshing them here would show stale numbers anyway while
+        // rebuilding the cards on every keystroke (they sit above the
+        // table) yanks the page's scroll position around. They catch up
+        // for real via the `renderFoot()` call in `exitReadOnly`.
+        const recomputeWeighted = () => {
+          const cost = parseNumber(costInput.value);
+          weeks.forEach((week) => {
+            const input = weekInputs[week.id];
+            const percent = input ? parseNumber(input.value) : 0;
+            const weighted = (percent / 100) * cost;
+            weekCellWraps[week.id].computedEl.textContent = `(${formatTotal(weighted)})`;
+          });
+        };
+
+        costInput.addEventListener("input", recomputeWeighted);
+        Object.values(weekInputs).forEach((input) => input.addEventListener("input", recomputeWeighted));
+        [unitInput, qtyInput, costInput, ...Object.values(weekInputs)].forEach(bindEnterEscape);
+        recomputeWeighted();
+      } else {
+        for (let i = 0; i < 3 + weeks.length; i++) {
+          const td = document.createElement("td");
+          tr.insertBefore(td, actionsTd);
+          levelCells.push(td);
+        }
+      }
+    }
+
+    function bindEnterEscape(input) {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          commit();
+        } else if (e.key === "Escape") {
+          cancel();
+        }
+      });
+    }
+
+    buildLevelCells();
+
+    levelSelect.addEventListener("change", () => {
+      currentLevel = parseInt(levelSelect.value, 10);
+      codeInput.placeholder = codePlaceholderFor(currentLevel);
+      descInput.placeholder = descPlaceholderFor(currentLevel);
+      buildLevelCells();
+    });
+
     let settled = false;
     const stopWatching = watchOutsideClick(tr, () => commit());
 
@@ -688,8 +769,8 @@
     const commit = async () => {
       if (settled) return;
       settled = true;
-      const payload = { code: codeInput.value, description: descInput.value };
-      if (item.level === LEVEL_ITEM) {
+      const payload = { code: codeInput.value, description: descInput.value, level: currentLevel };
+      if (currentLevel === LEVEL_ITEM) {
         payload.unit = unitInput.value;
         payload.suggested_quantity = parseNumber(qtyInput.value);
         payload.project_cost_percent = parseNumber(costInput.value);
@@ -703,7 +784,7 @@
       } catch (err) {
         console.error(err);
       }
-      if (item.level === LEVEL_ITEM) {
+      if (currentLevel === LEVEL_ITEM) {
         for (const week of weeks) {
           const input = weekInputs[week.id];
           if (!input) continue;
@@ -728,16 +809,7 @@
       exitReadOnly();
     };
 
-    allInputs.forEach((input) => {
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          commit();
-        } else if (e.key === "Escape") {
-          cancel();
-        }
-      });
-    });
+    [codeInput, descInput].forEach(bindEnterEscape);
 
     deleteBtn.addEventListener("click", async () => {
       if (!confirm("Delete this row?")) return;

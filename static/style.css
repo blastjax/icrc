@@ -1274,6 +1274,20 @@ a.btn-secondary {
   outline: none;
 }
 
+.pt-level-select {
+  display: block;
+  width: 100%;
+  min-width: 108px;
+  padding: 5px 6px;
+  margin-bottom: 4px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  outline: none;
+  background: #fff;
+  color: var(--text);
+}
+
 .pt-week-delete,
 .pt-row-delete {
   background: none;
