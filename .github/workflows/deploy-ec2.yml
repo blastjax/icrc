@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy to Lightsail
 
 on:
   push:
@@ -8,37 +8,30 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
     # One deploy at a time; queue rather than cancel so a run that already
     # started updating the host is never interrupted half-way.
     concurrency:
-      group: deploy-ec2
+      group: deploy-lightsail
       cancel-in-progress: false
     steps:
-      # Direct SSH from GitHub-hosted (Azure) runners to this host times out
-      # at the TCP level for reasons invisible on either side (SG/NACL wide
-      # open, no host firewall, instance healthy - same issue seen on
-      # blastjax's sibling instance). SSM runs over HTTPS through AWS's own
-      # endpoints instead of a public port-22 connection, so it isn't
-      # subject to whatever was dropping that path.
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
-          aws-region: ${{ vars.AWS_REGION }}
+      # Moved off EC2+SSM onto a Lightsail instance (see git history for the
+      # migration). SSM was originally chosen here because direct SSH from
+      # GitHub-hosted runners to the old EC2 host mysteriously timed out at
+      # the TCP level; that was re-tested against this Lightsail host as part
+      # of the migration and reaches it fine, so plain SSH is back - it also
+      # means no AWS IAM role/OIDC is needed for deploys at all any more.
+      - name: Configure SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Deploy via SSM
+      - name: Deploy via SSH
         run: |
           cat > /tmp/deploy.sh <<'SCRIPT'
           set -e
           cd ${{ vars.APP_DIR }}
-
-          # SSM runs this as root, but the repo is owned by the box's normal
-          # deploy user - without this, git refuses to touch a repo it
-          # doesn't own (CVE-2022-24765 mitigation). --system instead of
-          # --global since $HOME isn't set in the SSM execution environment.
-          git config --system --add safe.directory ${{ vars.APP_DIR }}
           git pull origin main
           mkdir -p data output
 
@@ -54,7 +47,7 @@ jobs:
           if [ ! -f data/project_management.db ] && docker inspect icrc-contract-generator >/dev/null 2>&1; then
             docker cp icrc-contract-generator:/app/data/. ./data/ || true
           fi
-          chown -R 1000:1000 data output
+          sudo chown -R 1000:1000 data output
 
           # One-time migration off the old raw `docker run` deployment
           # (replaced by docker compose + Caddy for HTTPS) - stop/remove
@@ -101,35 +94,5 @@ jobs:
           echo "caddy is running"
           SCRIPT
 
-          jq -Rs '{"commands": [.]}' /tmp/deploy.sh > /tmp/ssm-params.json
-
-          CMD_ID=$(aws ssm send-command \
-            --instance-ids "${{ vars.EC2_INSTANCE_ID }}" \
-            --document-name "AWS-RunShellScript" \
-            --parameters file:///tmp/ssm-params.json \
-            --timeout-seconds 1800 \
-            --query "Command.CommandId" --output text)
-          echo "SSM CommandId: $CMD_ID"
-
-          # Poll for up to 30 minutes.
-          STATUS="Pending"
-          for _ in $(seq 1 180); do
-            STATUS=$(aws ssm get-command-invocation \
-              --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" \
-              --query "Status" --output text 2>/dev/null || echo "Pending")
-            case "$STATUS" in
-              Success|Failed|Cancelled|TimedOut) break ;;
-            esac
-            sleep 10
-          done
-
-          echo "Final status: $STATUS"
-          echo "--- stdout ---"
-          aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" --query "StandardOutputContent" --output text
-          echo "--- stderr ---"
-          aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" --query "StandardErrorContent" --output text
-
-          if [ "$STATUS" != "Success" ]; then
-            echo "Deploy command finished with status: $STATUS" >&2
-            exit 1
-          fi
+          scp -i ~/.ssh/deploy_key /tmp/deploy.sh "ubuntu@${{ secrets.DEPLOY_HOST }}:/tmp/deploy.sh"
+          ssh -i ~/.ssh/deploy_key "ubuntu@${{ secrets.DEPLOY_HOST }}" 'bash /tmp/deploy.sh'
