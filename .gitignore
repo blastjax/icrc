@@ -9,3 +9,5 @@ output/
 
 build/
 dist/
+
+docker-compose.override.yml

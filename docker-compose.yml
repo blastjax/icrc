@@ -5,18 +5,21 @@ services:
     # No host port publish in production - only reachable through Caddy
     # (see below). Local dev can still hit it directly with:
     #   docker compose run --service-ports web
-    # APP_USERNAME/APP_PASSWORD/SECRET_KEY come from a .env file the deploy
-    # workflow writes from GitHub secrets - not committed to the repo. Using
-    # substitution (not env_file:) so this also works with no .env present
-    # at all, which is the case for local dev (login is then skipped
-    # entirely - see app.py).
+    # APP_USERNAME/APP_PASSWORD/SECRET_KEY/DATABASE_URL come from a .env file
+    # the deploy workflow writes from GitHub secrets - not committed to the
+    # repo. Using substitution (not env_file:) so this also works with no
+    # .env present at all, which is the case for local dev (login is then
+    # skipped entirely - see app.py).
     environment:
       APP_USERNAME: ${APP_USERNAME:-}
       APP_PASSWORD: ${APP_PASSWORD:-}
       SECRET_KEY: ${SECRET_KEY:-}
+      DATABASE_URL: ${DATABASE_URL:-}
+      REDIS_URL: redis://redis:6379/0
     volumes:
       - ./output:/app/output
-      - ./data:/app/data
+    depends_on:
+      - redis
     healthcheck:
       test:
         - "CMD"
@@ -27,6 +30,11 @@ services:
       timeout: 5s
       retries: 5
       start_period: 20s
+  redis:
+    image: redis:7-alpine
+    restart: always
+    # Cache only, no persistence needed - a restart just means the next
+    # page load re-warms it from Postgres.
   caddy:
     restart: always
     image: caddy:2-alpine

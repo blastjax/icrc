@@ -16,7 +16,7 @@ COPY static/ static/
 COPY docx_templates/ docx_templates/
 
 RUN useradd --create-home --uid 1000 appuser \
-    && mkdir -p output data \
+    && mkdir -p output \
     && chown -R appuser:appuser /app
 USER appuser
 

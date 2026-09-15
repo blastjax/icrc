@@ -33,21 +33,20 @@ jobs:
           set -e
           cd ${{ vars.APP_DIR }}
           git pull origin main
-          mkdir -p data output
+          mkdir -p output
 
-          # Login credentials for the site, and the Flask session signing
-          # key - kept out of the repo, only ever written to this file on
-          # the host. chmod so only root/owner can read it.
+          # Login credentials for the site, the Flask session signing key,
+          # and the Neon Postgres connection string - kept out of the repo,
+          # only ever written to this file on the host. chmod so only
+          # root/owner can read it.
           cat > .env <<'ENVEOF'
           APP_USERNAME=${{ secrets.APP_USERNAME }}
           APP_PASSWORD=${{ secrets.APP_PASSWORD }}
           SECRET_KEY=${{ secrets.APP_SECRET_KEY }}
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
           ENVEOF
           chmod 600 .env
-          if [ ! -f data/project_management.db ] && docker inspect icrc-contract-generator >/dev/null 2>&1; then
-            docker cp icrc-contract-generator:/app/data/. ./data/ || true
-          fi
-          sudo chown -R 1000:1000 data output
+          sudo chown -R 1000:1000 output
 
           # One-time migration off the old raw `docker run` deployment
           # (replaced by docker compose + Caddy for HTTPS) - stop/remove

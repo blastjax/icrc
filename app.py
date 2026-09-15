@@ -11,6 +11,7 @@ from flask import Flask, render_template, request, send_file, jsonify, redirect,
 from core.docx_filler import fill_template, REQUIRED_FIELDS
 from core.docx_filler_wad import fill_template_wad
 from core import boq_import
+from core import cache
 from core import pm_db
 from core import progress_export
 
@@ -31,15 +32,30 @@ def app_dir() -> str:
     return os.path.dirname(os.path.abspath(__file__))
 
 
+def _load_dotenv(path: str) -> None:
+    """Minimal .env loader for local dev (`python app.py`); in Docker these
+    vars already come from the container environment, so this is a no-op
+    there. Never overrides a var that's already set."""
+    if not os.path.exists(path):
+        return
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
+_load_dotenv(os.path.join(app_dir(), ".env"))
+
 TEMPLATE_PATH = resource_path("docx_templates", "Contract for Works Template.docx")
 TEMPLATE_PATH_WAD = resource_path("docx_templates", "WAD Template.docx")
 OUTPUT_DIR = os.path.join(app_dir(), "output")
-DATA_DIR = os.path.join(app_dir(), "data")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-os.makedirs(DATA_DIR, exist_ok=True)
 
-pm_db.init_db(os.path.join(DATA_DIR, "project_management.db"))
+pm_db.init_db(os.environ["DATABASE_URL"])
 
 app = Flask(
     __name__,
@@ -129,9 +145,19 @@ def progress_tracker_detail(project_id):
     )
 
 
+@app.after_request
+def _invalidate_cache_on_write(response):
+    """Any write under /api/ can change what the cached list endpoints
+    below would return, so flush the whole (tiny) cache rather than
+    tracking which keys each write touches."""
+    if request.path.startswith("/api/") and request.method != "GET":
+        cache.invalidate_all()
+    return response
+
+
 @app.route("/api/columns", methods=["GET"])
 def api_list_columns():
-    return jsonify(pm_db.list_columns())
+    return jsonify(cache.get_or_set("columns", pm_db.list_columns))
 
 
 @app.route("/api/columns", methods=["POST"])
@@ -177,7 +203,7 @@ def api_delete_column(key):
 
 @app.route("/api/tasks", methods=["GET"])
 def api_list_tasks():
-    return jsonify(pm_db.list_tasks())
+    return jsonify(cache.get_or_set("tasks", pm_db.list_tasks))
 
 
 @app.route("/api/tasks", methods=["POST"])
@@ -327,7 +353,7 @@ def api_delete_payment_row(row_id):
 
 @app.route("/api/progress/projects", methods=["GET"])
 def api_list_progress_projects():
-    return jsonify(pm_db.list_progress_projects())
+    return jsonify(cache.get_or_set("progress_projects", pm_db.list_progress_projects))
 
 
 @app.route("/api/progress/projects", methods=["POST"])

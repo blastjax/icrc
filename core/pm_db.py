@@ -1,23 +1,93 @@
-"""SQLite-backed storage for the Project Management board (tasks, column
-titles, and per-task custom fields), so board state survives app restarts
-instead of living only in the browser's localStorage."""
+"""Postgres-backed storage (via a Neon database) for the Project Management
+board (tasks, column titles, and per-task custom fields), so board state
+survives app restarts instead of living only in the browser's localStorage.
+
+Was SQLite; migrated to Postgres (see git history). The `?`-placeholder,
+sqlite3.Row-shaped call sites below are unchanged - `_Row`/`_Cursor`/`_Conn`
+below give psycopg2 the same shape so callers didn't need to be rewritten."""
 
 from __future__ import annotations
 
 import re
-import sqlite3
 import uuid
 from contextlib import contextmanager
 from datetime import datetime, timezone
 
-_db_path: str | None = None
+import psycopg2
+
+_db_url: str | None = None
 
 
-def init_db(db_path: str) -> None:
+class _Row(tuple):
+    """Mimics sqlite3.Row: supports both row[0] and row["col"], and
+    dict(row) (via the `keys()` + __getitem__ mapping protocol)."""
+
+    def __new__(cls, values, columns):
+        obj = super().__new__(cls, values)
+        obj._columns = columns
+        return obj
+
+    def __getitem__(self, key):
+        if isinstance(key, str):
+            key = self._columns.index(key)
+        return tuple.__getitem__(self, key)
+
+    def keys(self):
+        return self._columns
+
+
+class _Cursor:
+    """Wraps a psycopg2 cursor: translates sqlite's `?` placeholders to
+    `%s`, and wraps fetched rows as _Row."""
+
+    def __init__(self, cur):
+        self._cur = cur
+
+    def execute(self, sql, params=()):
+        self._cur.execute(sql.replace("?", "%s"), params)
+        return self
+
+    def _wrap(self, row):
+        if row is None:
+            return None
+        return _Row(row, tuple(d[0] for d in self._cur.description))
+
+    def fetchone(self):
+        return self._wrap(self._cur.fetchone())
+
+    def fetchall(self):
+        return [self._wrap(r) for r in self._cur.fetchall()]
+
+    def __iter__(self):
+        return iter(self.fetchall())
+
+    @property
+    def rowcount(self):
+        return self._cur.rowcount
+
+
+class _Conn:
+    """Wraps a psycopg2 connection to add sqlite3.Connection's `.execute()`
+    shortcut (a fresh cursor per call)."""
+
+    def __init__(self, conn):
+        self._conn = conn
+
+    def execute(self, sql, params=()):
+        return _Cursor(self._conn.cursor()).execute(sql, params)
+
+    def commit(self):
+        self._conn.commit()
+
+    def close(self):
+        self._conn.close()
+
+
+def init_db(database_url: str) -> None:
     """Creates the tables (if needed). Must be called once, before any
     other function here."""
-    global _db_path
-    _db_path = db_path
+    global _db_url
+    _db_url = database_url
 
     with _connect() as conn:
         conn.execute(
@@ -37,19 +107,6 @@ def init_db(db_path: str) -> None:
                 position INTEGER NOT NULL DEFAULT 0
             )"""
         )
-
-        task_columns = {row[1] for row in conn.execute("PRAGMA table_info(tasks)")}
-        if "position" not in task_columns:
-            conn.execute("ALTER TABLE tasks ADD COLUMN position INTEGER NOT NULL DEFAULT 0")
-            for status_row in conn.execute("SELECT DISTINCT status FROM tasks"):
-                task_ids = [
-                    r[0]
-                    for r in conn.execute(
-                        "SELECT id FROM tasks WHERE status = ? ORDER BY created_at", (status_row[0],)
-                    )
-                ]
-                for position, task_id in enumerate(task_ids):
-                    conn.execute("UPDATE tasks SET position = ? WHERE id = ?", (position, task_id))
         conn.execute(
             """CREATE TABLE IF NOT EXISTS custom_fields (
                 id TEXT PRIMARY KEY,
@@ -68,11 +125,6 @@ def init_db(db_path: str) -> None:
                 position INTEGER NOT NULL
             )"""
         )
-
-        row_columns = {row[1] for row in conn.execute("PRAGMA table_info(custom_field_rows)")}
-        if "url" not in row_columns:
-            conn.execute("ALTER TABLE custom_field_rows ADD COLUMN url TEXT NOT NULL DEFAULT ''")
-
         conn.execute(
             """CREATE TABLE IF NOT EXISTS payment_rows (
                 id TEXT PRIMARY KEY,
@@ -88,7 +140,6 @@ def init_db(db_path: str) -> None:
                 position INTEGER NOT NULL
             )"""
         )
-
         conn.execute(
             """CREATE TABLE IF NOT EXISTS progress_projects (
                 id TEXT PRIMARY KEY,
@@ -113,7 +164,8 @@ def init_db(db_path: str) -> None:
                 suggested_quantity REAL NOT NULL DEFAULT 0,
                 project_cost_percent REAL NOT NULL DEFAULT 0,
                 is_category INTEGER NOT NULL DEFAULT 0,
-                position INTEGER NOT NULL
+                position INTEGER NOT NULL,
+                level INTEGER NOT NULL DEFAULT 2
             )"""
         )
         conn.execute(
@@ -126,69 +178,10 @@ def init_db(db_path: str) -> None:
             )"""
         )
 
-        progress_week_columns = {row[1] for row in conn.execute("PRAGMA table_info(progress_weeks)")}
-        if "project_id" not in progress_week_columns:
-            conn.execute("ALTER TABLE progress_weeks ADD COLUMN project_id TEXT NOT NULL DEFAULT ''")
-
-        progress_item_columns = {row[1] for row in conn.execute("PRAGMA table_info(progress_items)")}
-        if "project_id" not in progress_item_columns:
-            conn.execute("ALTER TABLE progress_items ADD COLUMN project_id TEXT NOT NULL DEFAULT ''")
-
-        # level: 0 = category (e.g. "A GENERAL"), 1 = subcategory tied to a
-        # category (e.g. "BS1 Conduits"), 2 = leaf item carrying real Unit /
-        # Quantity / Cost / progress data. Backfill from the older
-        # is_category flag (1 -> category, 0 -> item); it's left in the
-        # table unused rather than dropped.
-        if "level" not in progress_item_columns:
-            conn.execute("ALTER TABLE progress_items ADD COLUMN level INTEGER NOT NULL DEFAULT 2")
-            conn.execute("UPDATE progress_items SET level = 0 WHERE is_category = 1")
-            conn.execute("UPDATE progress_items SET level = 2 WHERE is_category = 0")
-
-        # Adopt any weeks/items created before projects existed into a
-        # default project, so already-entered tracker data isn't orphaned.
-        orphan_weeks = conn.execute("SELECT COUNT(*) FROM progress_weeks WHERE project_id = ''").fetchone()[0]
-        orphan_items = conn.execute("SELECT COUNT(*) FROM progress_items WHERE project_id = ''").fetchone()[0]
-        if orphan_weeks or orphan_items:
-            default_project_id = uuid.uuid4().hex
-            conn.execute(
-                "INSERT INTO progress_projects (id, name) VALUES (?, ?)",
-                (default_project_id, "Untitled Project"),
-            )
-            conn.execute("UPDATE progress_weeks SET project_id = ? WHERE project_id = ''", (default_project_id,))
-            conn.execute("UPDATE progress_items SET project_id = ? WHERE project_id = ''", (default_project_id,))
-
-        payment_columns = {row[1]: row[2] for row in conn.execute("PRAGMA table_info(payment_rows)")}
-        if payment_columns.get("pam_iris") == "TEXT":
-            conn.execute("ALTER TABLE payment_rows RENAME TO payment_rows_old")
-            conn.execute(
-                """CREATE TABLE payment_rows (
-                    id TEXT PRIMARY KEY,
-                    task_id TEXT NOT NULL,
-                    payment_no TEXT NOT NULL DEFAULT '',
-                    description TEXT NOT NULL DEFAULT '',
-                    pam_iris REAL NOT NULL DEFAULT 0,
-                    cdp_chf REAL NOT NULL DEFAULT 0,
-                    invoice_amount REAL NOT NULL DEFAULT 0,
-                    expected_date TEXT NOT NULL DEFAULT '',
-                    payment_status TEXT NOT NULL DEFAULT '',
-                    invoice_link TEXT NOT NULL DEFAULT '',
-                    position INTEGER NOT NULL
-                )"""
-            )
-            conn.execute(
-                """INSERT INTO payment_rows
-                    SELECT id, task_id, payment_no, description,
-                           CAST(pam_iris AS REAL), cdp_chf, invoice_amount,
-                           expected_date, payment_status, invoice_link, position
-                    FROM payment_rows_old"""
-            )
-            conn.execute("DROP TABLE payment_rows_old")
-
 
 @contextmanager
 def _connect():
-    conn = sqlite3.connect(_db_path)
-    conn.row_factory = sqlite3.Row
+    conn = _Conn(psycopg2.connect(_db_url))
     try:
         yield conn
         conn.commit()
@@ -196,7 +189,7 @@ def _connect():
         conn.close()
 
 
-def _insert_task(conn: sqlite3.Connection, title: str, status: str, description: str = "") -> dict:
+def _insert_task(conn: _Conn, title: str, status: str, description: str = "") -> dict:
     position = conn.execute(
         "SELECT COALESCE(MAX(position), -1) + 1 FROM tasks WHERE status = ?", (status,)
     ).fetchone()[0]
@@ -215,7 +208,7 @@ def _insert_task(conn: sqlite3.Connection, title: str, status: str, description:
     return task
 
 
-def _attach_custom_fields(conn: sqlite3.Connection, task: dict) -> dict:
+def _attach_custom_fields(conn: _Conn, task: dict) -> dict:
     field_rows = conn.execute(
         "SELECT * FROM custom_fields WHERE task_id = ? ORDER BY position", (task["id"],)
     ).fetchall()
@@ -319,7 +312,7 @@ def update_task(task_id: str, title: str | None = None, description: str | None 
         return _attach_custom_fields(conn, task)
 
 
-def _relocate_task(conn: sqlite3.Connection, task_id: str, old_status: str, new_status: str, index: int | None) -> None:
+def _relocate_task(conn: _Conn, task_id: str, old_status: str, new_status: str, index: int | None) -> None:
     """Places `task_id` into `new_status` at `index` (end of column if
     None), then reassigns 0..n-1 positions for both the destination column
     and (if different) the now-vacated source column so positions stay
@@ -580,7 +573,7 @@ def delete_payment_row(row_id: str) -> bool:
         return cur.rowcount > 0
 
 
-def _project_completion_percent(conn: sqlite3.Connection, project_id: str) -> float:
+def _project_completion_percent(conn: _Conn, project_id: str) -> float:
     """Same math as the per-project page's overall completion card: the
     latest week's weighted-to-date cost (Progress % / 100 * % Project Cost,
     summed over leaf items — level 2) divided by the total % Project Cost.
@@ -611,7 +604,7 @@ def list_progress_projects() -> list[dict]:
     ordering to preserve. Each project dict also carries a
     `completion_percent`, for the project-list cards."""
     with _connect() as conn:
-        rows = conn.execute("SELECT * FROM progress_projects ORDER BY name COLLATE NOCASE").fetchall()
+        rows = conn.execute("SELECT * FROM progress_projects ORDER BY LOWER(name)").fetchall()
         projects = [dict(row) for row in rows]
         for project in projects:
             project["completion_percent"] = _project_completion_percent(conn, project["id"])
@@ -739,7 +732,7 @@ def delete_progress_week(week_id: str) -> bool:
         return cur.rowcount > 0
 
 
-def _attach_progress_entries(conn: sqlite3.Connection, item: dict) -> dict:
+def _attach_progress_entries(conn: _Conn, item: dict) -> dict:
     rows = conn.execute(
         "SELECT week_id, progress_percent FROM progress_entries WHERE item_id = ?", (item["id"],)
     ).fetchall()
