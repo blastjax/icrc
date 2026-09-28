@@ -5,9 +5,50 @@ on:
     branches: [main]
   workflow_dispatch: {}
 
+env:
+  REGISTRY: ghcr.io
+  WEB_IMAGE: ghcr.io/${{ github.repository }}-web
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Built here instead of on the Lightsail host, which it shares with the
+      # blastjax and portfolio-film sites: an image build there competes with
+      # all of them for the box's CPU and memory at deploy time.
+      - name: Build and push web
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.WEB_IMAGE }}:latest
+            ${{ env.WEB_IMAGE }}:${{ github.sha }}
+          cache-from: type=registry,ref=${{ env.WEB_IMAGE }}:buildcache
+          cache-to: type=registry,ref=${{ env.WEB_IMAGE }}:buildcache,mode=max,image-manifest=true,oci-mediatypes=true
+          provenance: false
+          sbom: false
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
     # One deploy at a time; queue rather than cancel so a run that already
     # started updating the host is never interrupted half-way.
     concurrency:
@@ -31,7 +72,20 @@ jobs:
         run: |
           cat > /tmp/deploy.sh <<'SCRIPT'
           set -e
-          cd ${{ vars.APP_DIR }}
+          APP_DIR='${{ vars.APP_DIR }}'
+
+          # First deploy onto a fresh host: check the repo out in place (the
+          # repo is public, so no credentials are needed). `init` + `checkout`
+          # rather than `clone` so it also works on a directory that already
+          # exists.
+          if [ ! -d "$APP_DIR/.git" ]; then
+            mkdir -p "$APP_DIR"
+            git -C "$APP_DIR" init -q
+            git -C "$APP_DIR" remote add origin 'https://github.com/${{ github.repository }}.git'
+            git -C "$APP_DIR" fetch -q origin main
+            git -C "$APP_DIR" checkout -q -B main origin/main
+          fi
+          cd "$APP_DIR"
           git pull origin main
           mkdir -p output
 
@@ -54,15 +108,62 @@ jobs:
           docker stop icrc-contract-generator 2>/dev/null || true
           docker rm icrc-contract-generator 2>/dev/null || true
 
-          docker compose up -d --build
+          # On the shared Lightsail host, the blastjax repo's deploy runs an edge
+          # proxy that fronts every site there and owns ports 80/443; its
+          # /srv/edge/bin/edge-install helper is how this deploy knows it's on
+          # that host. docker-compose.edge.yml then joins web to the edge network
+          # and keeps this stack's own caddy off. Anywhere else (a host running
+          # only this stack) it deploys standalone with its own caddy, as before.
+          if [ -x /srv/edge/bin/edge-install ]; then
+            EDGE=1
+            compose() { docker compose -f docker-compose.yml -f docker-compose.edge.yml "$@"; }
+            docker network inspect edge >/dev/null 2>&1 || docker network create edge
+          else
+            EDGE=""
+            compose() { docker compose "$@"; }
+          fi
+
+          # A private docker config for this run's GHCR login: on the shared host
+          # the other repos' deploys log in and out too, and with a shared
+          # ~/.docker/config.json one of them logging out (or in with its own
+          # token) mid-pull would break this run's pull. cli-plugins is linked
+          # in so a compose plugin installed per-user is still found.
+          export DOCKER_CONFIG="$(mktemp -d)"
+          trap 'rm -rf "$DOCKER_CONFIG"' EXIT
+          if [ -d "$HOME/.docker/cli-plugins" ]; then
+            ln -s "$HOME/.docker/cli-plugins" "$DOCKER_CONFIG/cli-plugins"
+          fi
+
+          # This run's GITHUB_TOKEN only, not a durable secret on the box:
+          # it expires with the workflow run, so nothing long-lived to
+          # revoke or rotate here. Images already pulled keep running fine
+          # after it expires.
+          echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+          export WEB_IMAGE='${{ env.WEB_IMAGE }}'
+          # --policy always: web defines both `image:` and `build:` (the
+          # build: block is for local `docker compose up --build` only), so a
+          # plain `pull` skips it as "buildable" and `up` would then build it
+          # on this box. This flag forces the GHCR image to be pulled instead.
+          compose pull --policy always web
+          compose up -d --remove-orphans
+          if [ -n "$EDGE" ]; then
+            # Removes the caddy a standalone deploy left behind, if any, so it
+            # can't hold ports 80/443 against the edge proxy.
+            compose rm -sf caddy
+            # Adds/updates this site's block and hot-reloads the proxy; rolled
+            # back (and the deploy failed) if Caddy rejects it.
+            /srv/edge/bin/edge-install sites/icrc.caddy Caddyfile
+          fi
           docker image prune -f
+          docker logout ghcr.io
 
           # Fail the job if the app doesn't come up, so a red check means
           # "not deployed" rather than "deployed and broken".
-          cid=$(docker compose ps -q web)
+          cid=$(compose ps -q web)
           if [ -z "$cid" ]; then
             echo "web container is not running" >&2
-            docker compose logs --tail 50 web >&2 || true
+            compose logs --tail 50 web >&2 || true
             exit 1
           fi
           healthy=""
@@ -76,21 +177,35 @@ jobs:
           done
           if [ -z "$healthy" ]; then
             echo "web did not become healthy (last status: ${status:-unknown})" >&2
-            docker compose logs --tail 50 web >&2 || true
+            compose logs --tail 50 web >&2 || true
             exit 1
           fi
           echo "web is healthy"
 
-          # Caddy has no HEALTHCHECK of its own - just confirm it's
-          # actually running (not exited on a config/bind error).
-          sleep 3
-          caddy_cid=$(docker compose ps -q caddy)
-          if [ -z "$caddy_cid" ] || [ "$(docker inspect -f '{{.State.Running}}' "$caddy_cid")" != "true" ]; then
-            echo "caddy container is not running" >&2
-            docker compose logs --tail 50 caddy >&2 || true
-            exit 1
+          if [ -n "$EDGE" ]; then
+            # Confirm the edge proxy is up and reaches this site through the
+            # edge network by the alias the Caddyfile proxies to.
+            if [ "$(docker inspect -f '{{.State.Running}}' edge-caddy 2>/dev/null || true)" != "true" ]; then
+              echo "edge-caddy is not running - deploy blastjax to (re)start the edge proxy" >&2
+              exit 1
+            fi
+            if ! docker exec edge-caddy wget -q -T 10 -O /dev/null http://icrc-web:5000/; then
+              echo "edge-caddy cannot reach icrc-web:5000" >&2
+              exit 1
+            fi
+            echo "edge-caddy is running and reaches icrc-web"
+          else
+            # Caddy has no HEALTHCHECK of its own - just confirm it's
+            # actually running (not exited on a config/bind error).
+            sleep 3
+            caddy_cid=$(compose ps -q caddy)
+            if [ -z "$caddy_cid" ] || [ "$(docker inspect -f '{{.State.Running}}' "$caddy_cid")" != "true" ]; then
+              echo "caddy container is not running" >&2
+              compose logs --tail 50 caddy >&2 || true
+              exit 1
+            fi
+            echo "caddy is running"
           fi
-          echo "caddy is running"
           SCRIPT
 
           scp -i ~/.ssh/deploy_key /tmp/deploy.sh "ubuntu@${{ secrets.DEPLOY_HOST }}:/tmp/deploy.sh"

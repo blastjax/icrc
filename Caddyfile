@@ -1,4 +1,9 @@
+# icrc's site block. On the shared Lightsail host it runs inside blastjax's
+# edge proxy (installed as /srv/edge/caddy/sites/icrc.caddy); on a host
+# running only this stack it is the whole config of this repo's own caddy
+# service. It proxies to the icrc-web alias rather than `web` because the edge
+# network is shared and every app there has a `web` service.
 maiacruz.com {
 	encode gzip
-	reverse_proxy web:5000
+	reverse_proxy icrc-web:5000
 }
