@@ -1,7 +1,17 @@
 services:
   web:
+    # image: pulled from GHCR on the Lightsail host (see
+    # .github/workflows/deploy-ec2.yml); the build: block below is only
+    # exercised by a local `docker compose up --build`.
+    image: ${WEB_IMAGE:-icrc-web}:latest
     build: .
     restart: always
+    # icrc-web is the name the Caddyfile proxies to. It's unique, unlike
+    # `web`, so the same site block also works on the shared edge network
+    # (docker-compose.edge.yml).
+    networks:
+      default:
+        aliases: [icrc-web]
     # No host port publish in production - only reachable through Caddy
     # (see below). Local dev can still hit it directly with:
     #   docker compose run --service-ports web
@@ -39,7 +49,10 @@ services:
     restart: always
     image: caddy:2-alpine
     # Sole public entry point: terminates TLS (auto-provisions and renews
-    # the Let's Encrypt cert for the domain in the Caddyfile).
+    # the Let's Encrypt cert for the domain in the Caddyfile). Only for a host
+    # running this stack on its own: on the shared Lightsail host the deploy
+    # adds docker-compose.edge.yml, which switches this off in favour of the
+    # edge proxy fronting every site there.
     ports:
       - "80:80"
       - "443:443"
