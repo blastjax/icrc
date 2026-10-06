@@ -1052,8 +1052,17 @@ a.btn-secondary {
   }
 }
 
-.pt-subcat-modal {
+.pt-subcat-modal,
+.pt-pdf-modal {
   width: 480px;
+}
+
+.pt-pdf-week {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  cursor: pointer;
 }
 
 .pt-subcat-modal-title {
@@ -1270,16 +1279,6 @@ a.btn-secondary {
 
 .pt-week-title {
   font-weight: 700;
-}
-
-.pt-week-label {
-  margin-top: 4px;
-  font-weight: 400;
-  font-size: 12px;
-  text-transform: none;
-  letter-spacing: normal;
-  color: var(--text-muted);
-  white-space: nowrap;
 }
 
 .pt-week-label-input {

@@ -430,7 +430,10 @@ def api_export_progress_pdf(project_id):
         return jsonify({"error": "Project not found"}), 404
     weeks = pm_db.list_progress_weeks(project_id)
     items = pm_db.list_progress_items(project_id)
-    buf = progress_export.build_pdf(project, weeks, items)
+    # ?weeks=<id>,<id> limits the PDF to those weeks; absent means every week.
+    selected = request.args.get("weeks")
+    week_ids = set(selected.split(",")) if selected is not None else None
+    buf = progress_export.build_pdf(project, weeks, items, week_ids)
     filename = f"{_safe_filename(project['name'])}_Progress_{date.today().strftime('%d %B %Y')}.pdf"
     return send_file(
         buf,

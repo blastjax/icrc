@@ -9,13 +9,29 @@ below give psycopg2 the same shape so callers didn't need to be rewritten."""
 from __future__ import annotations
 
 import re
+import time
 import uuid
 from contextlib import contextmanager
 from datetime import datetime, timezone
 
 import psycopg2
+from psycopg2.extensions import connection as PgConnection
+from psycopg2.pool import ThreadedConnectionPool
 
-_db_url: str | None = None
+_pool: ThreadedConnectionPool | None = None
+
+# Neon drops connections when its compute autosuspends (after ~5 min idle),
+# so a pooled connection idle longer than this gets pinged before reuse.
+_PING_AFTER_IDLE_SECONDS = 30
+
+
+class _PooledConnection(PgConnection):
+    """psycopg2 connection that remembers when it was last used, so
+    _checkout() only pings ones that sat idle in the pool."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.last_used = time.monotonic()
 
 
 class _Row(tuple):
@@ -79,15 +95,16 @@ class _Conn:
     def commit(self):
         self._conn.commit()
 
-    def close(self):
-        self._conn.close()
-
 
 def init_db(database_url: str) -> None:
-    """Creates the tables (if needed). Must be called once, before any
-    other function here."""
-    global _db_url
-    _db_url = database_url
+    """Opens the connection pool and creates the tables (if needed). Must be
+    called once, before any other function here."""
+    global _pool
+    # minconn is also how many idle connections psycopg2 keeps; extras are
+    # closed on return. 4 covers a couple of viewers' parallel fetches.
+    # ponytail: past maxconn concurrent requests getconn() raises PoolError
+    # (a 500) instead of waiting - raise maxconn if usage ever gets there.
+    _pool = ThreadedConnectionPool(4, 20, database_url, connection_factory=_PooledConnection)
 
     with _connect() as conn:
         conn.execute(
@@ -177,16 +194,46 @@ def init_db(database_url: str) -> None:
                 UNIQUE(item_id, week_id)
             )"""
         )
+        # The foreign-key-style columns every lookup filters on.
+        # progress_entries.item_id is already covered by its UNIQUE index.
+        for table, column in (
+            ("tasks", "status"),
+            ("custom_fields", "task_id"),
+            ("custom_field_rows", "field_id"),
+            ("payment_rows", "task_id"),
+            ("progress_weeks", "project_id"),
+            ("progress_items", "project_id"),
+            ("progress_entries", "week_id"),
+        ):
+            conn.execute(f"CREATE INDEX IF NOT EXISTS {table}_{column}_idx ON {table} ({column})")
+
+
+def _checkout() -> _PooledConnection:
+    """Takes a connection from the pool, swapping out any that died while
+    idle. Fresh connections skip the ping, so this loop always ends."""
+    while True:
+        raw = _pool.getconn()
+        if time.monotonic() - raw.last_used < _PING_AFTER_IDLE_SECONDS:
+            return raw
+        try:
+            raw.cursor().execute("SELECT 1")
+            return raw
+        except psycopg2.Error:
+            _pool.putconn(raw, close=True)
 
 
 @contextmanager
 def _connect():
-    conn = _Conn(psycopg2.connect(_db_url))
+    raw = _checkout()
     try:
+        conn = _Conn(raw)
         yield conn
         conn.commit()
     finally:
-        conn.close()
+        raw.last_used = time.monotonic()
+        # putconn rolls back a transaction left open by an exception, and
+        # discards the connection if it's broken.
+        _pool.putconn(raw)
 
 
 def _insert_task(conn: _Conn, title: str, status: str, description: str = "") -> dict:
@@ -208,20 +255,28 @@ def _insert_task(conn: _Conn, title: str, status: str, description: str = "") ->
     return task
 
 
-def _attach_custom_fields(conn: _Conn, task: dict) -> dict:
-    field_rows = conn.execute(
-        "SELECT * FROM custom_fields WHERE task_id = ? ORDER BY position", (task["id"],)
-    ).fetchall()
-    fields = []
-    for field_row in field_rows:
-        field = dict(field_row)
-        row_rows = conn.execute(
-            "SELECT * FROM custom_field_rows WHERE field_id = ? ORDER BY position", (field["id"],)
-        ).fetchall()
-        field["rows"] = [dict(r) for r in row_rows]
-        fields.append(field)
-    task["custom_fields"] = fields
-    return task
+def _attach_custom_fields(conn: _Conn, tasks: list[dict]) -> list[dict]:
+    """Sets each task's "custom_fields" (each field with its "rows") in two
+    queries total, not one per task and per field."""
+    fields_by_task = {task["id"]: [] for task in tasks}
+    fields = [
+        dict(r)
+        for r in conn.execute(
+            "SELECT * FROM custom_fields WHERE task_id = ANY(?) ORDER BY position", (list(fields_by_task),)
+        )
+    ]
+    rows_by_field = {field["id"]: [] for field in fields}
+    if fields:
+        for r in conn.execute(
+            "SELECT * FROM custom_field_rows WHERE field_id = ANY(?) ORDER BY position", (list(rows_by_field),)
+        ):
+            rows_by_field[r["field_id"]].append(dict(r))
+    for field in fields:
+        field["rows"] = rows_by_field[field["id"]]
+        fields_by_task[field["task_id"]].append(field)
+    for task in tasks:
+        task["custom_fields"] = fields_by_task[task["id"]]
+    return tasks
 
 
 def list_columns() -> list[dict]:
@@ -283,13 +338,13 @@ def create_column(title: str) -> dict:
 def list_tasks() -> list[dict]:
     with _connect() as conn:
         rows = conn.execute("SELECT * FROM tasks ORDER BY status, position").fetchall()
-        return [_attach_custom_fields(conn, dict(row)) for row in rows]
+        return _attach_custom_fields(conn, [dict(row) for row in rows])
 
 
 def create_task(title: str, status: str, description: str = "") -> dict:
     with _connect() as conn:
         task = _insert_task(conn, title, status, description)
-        return _attach_custom_fields(conn, task)
+        return _attach_custom_fields(conn, [task])[0]
 
 
 def update_task(task_id: str, title: str | None = None, description: str | None = None, status: str | None = None) -> dict | None:
@@ -309,7 +364,7 @@ def update_task(task_id: str, title: str | None = None, description: str | None 
             "UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ?",
             (task["title"], task["description"], task["status"], task_id),
         )
-        return _attach_custom_fields(conn, task)
+        return _attach_custom_fields(conn, [task])[0]
 
 
 def _relocate_task(conn: _Conn, task_id: str, old_status: str, new_status: str, index: int | None) -> None:
@@ -350,7 +405,7 @@ def reorder_task(task_id: str, status: str, index: int) -> dict | None:
         if status != old_status:
             conn.execute("UPDATE tasks SET status = ? WHERE id = ?", (status, task_id))
         updated = conn.execute("SELECT * FROM tasks WHERE id = ?", (task_id,)).fetchone()
-        return _attach_custom_fields(conn, dict(updated))
+        return _attach_custom_fields(conn, [dict(updated)])[0]
 
 
 def duplicate_task(task_id: str) -> dict | None:
@@ -412,7 +467,7 @@ def duplicate_task(task_id: str) -> dict | None:
                 ),
             )
 
-        return _attach_custom_fields(conn, new_task)
+        return _attach_custom_fields(conn, [new_task])[0]
 
 
 def delete_task(task_id: str) -> bool:
@@ -573,42 +628,43 @@ def delete_payment_row(row_id: str) -> bool:
         return cur.rowcount > 0
 
 
-def _project_completion_percent(conn: _Conn, project_id: str) -> float:
-    """Same math as the per-project page's overall completion card: the
-    latest week's weighted-to-date cost (Progress % / 100 * % Project Cost,
-    summed over leaf items — level 2) divided by the total % Project Cost.
-    Not summed across every week, since each week's entry is already
-    cumulative-to-date, not a delta."""
-    latest_week = conn.execute(
-        "SELECT id FROM progress_weeks WHERE project_id = ? ORDER BY position DESC LIMIT 1", (project_id,)
-    ).fetchone()
-    total_cost = conn.execute(
-        "SELECT COALESCE(SUM(project_cost_percent), 0) FROM progress_items WHERE project_id = ? AND level = 2",
-        (project_id,),
-    ).fetchone()[0]
-    if not total_cost:
-        return 0.0
-    weighted_done = conn.execute(
-        """SELECT COALESCE(SUM(pi.project_cost_percent * COALESCE(pe.progress_percent, 0) / 100.0), 0)
-           FROM progress_items pi
-           LEFT JOIN progress_entries pe ON pe.item_id = pi.id AND pe.week_id = ?
-           WHERE pi.project_id = ? AND pi.level = 2""",
-        (latest_week["id"] if latest_week else None, project_id),
-    ).fetchone()[0]
-    return (weighted_done / total_cost) * 100
-
-
 def list_progress_projects() -> list[dict]:
     """Alphabetical by name — each project is a fully separate tracker
     (its own categories, items, weeks, and entries), so there's no manual
     ordering to preserve. Each project dict also carries a
-    `completion_percent`, for the project-list cards."""
+    `completion_percent`, for the project-list cards.
+
+    Same math as the per-project page's overall completion card: the
+    latest week's weighted-to-date cost (Progress % / 100 * % Project Cost,
+    summed over leaf items — level 2) divided by the total % Project Cost.
+    Not summed across every week, since each week's entry is already
+    cumulative-to-date, not a delta. One query for every project."""
     with _connect() as conn:
-        rows = conn.execute("SELECT * FROM progress_projects ORDER BY LOWER(name)").fetchall()
-        projects = [dict(row) for row in rows]
-        for project in projects:
-            project["completion_percent"] = _project_completion_percent(conn, project["id"])
-        return projects
+        rows = conn.execute(
+            """WITH latest_week AS (
+                   SELECT DISTINCT ON (project_id) project_id, id
+                   FROM progress_weeks
+                   ORDER BY project_id, position DESC
+               )
+               SELECT p.id, p.name,
+                      COALESCE(SUM(pi.project_cost_percent), 0) AS total_cost,
+                      COALESCE(SUM(pi.project_cost_percent * COALESCE(pe.progress_percent, 0) / 100.0), 0)
+                          AS weighted_done
+               FROM progress_projects p
+               LEFT JOIN latest_week lw ON lw.project_id = p.id
+               LEFT JOIN progress_items pi ON pi.project_id = p.id AND pi.level = 2
+               LEFT JOIN progress_entries pe ON pe.item_id = pi.id AND pe.week_id = lw.id
+               GROUP BY p.id, p.name
+               ORDER BY LOWER(p.name)"""
+        ).fetchall()
+    return [
+        {
+            "id": r["id"],
+            "name": r["name"],
+            "completion_percent": (r["weighted_done"] / r["total_cost"]) * 100 if r["total_cost"] else 0.0,
+        }
+        for r in rows
+    ]
 
 
 def get_progress_project(project_id: str) -> dict | None:
@@ -756,13 +812,22 @@ def list_progress_items(project_id: str) -> list[dict]:
     right BOQ grouping), with numeric runs sorted by value rather than as
     text. `position` is only a tiebreak for equal/blank codes."""
     with _connect() as conn:
-        rows = conn.execute(
-            "SELECT * FROM progress_items WHERE project_id = ?",
+        items = [
+            dict(row)
+            for row in conn.execute("SELECT * FROM progress_items WHERE project_id = ?", (project_id,))
+        ]
+        entries_by_item = {}
+        for row in conn.execute(
+            """SELECT pe.item_id, pe.week_id, pe.progress_percent
+               FROM progress_entries pe JOIN progress_items pi ON pi.id = pe.item_id
+               WHERE pi.project_id = ?""",
             (project_id,),
-        ).fetchall()
-        items = [_attach_progress_entries(conn, dict(row)) for row in rows]
-        items.sort(key=lambda item: (_natural_code_key(item["code"]), item["position"]))
-        return items
+        ):
+            entries_by_item.setdefault(row["item_id"], {})[row["week_id"]] = row["progress_percent"]
+    for item in items:
+        item["entries"] = entries_by_item.get(item["id"], {})
+    items.sort(key=lambda item: (_natural_code_key(item["code"]), item["position"]))
+    return items
 
 
 def create_progress_item(project_id: str, level: int = 2) -> dict:

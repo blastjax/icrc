@@ -1,0 +1,170 @@
+{
+  "app.py": {
+    "mtime": 1791268892.3713367,
+    "seen": 1791268996.7853775,
+    "ast_hash": "cd459b8694a50f182e99ea1124e9089c",
+    "semantic_hash": ""
+  },
+  "core/__init__.py": {
+    "mtime": 1787808556.1474874,
+    "seen": 1791268242.4740272,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "core/boq_import.py": {
+    "mtime": 1787808556.1474874,
+    "seen": 1791268242.4740293,
+    "ast_hash": "6cb215aad25e6583d343daf938ca8611",
+    "semantic_hash": ""
+  },
+  "core/cache.py": {
+    "mtime": 1789441030.96946,
+    "seen": 1791268242.4740303,
+    "ast_hash": "d44e49057c3b613a63fe0833e12bb610",
+    "semantic_hash": ""
+  },
+  "core/docx_filler.py": {
+    "mtime": 1787808556.148528,
+    "seen": 1791268242.4740317,
+    "ast_hash": "96aec2263f67eb1f7b9c555895fc7f0c",
+    "semantic_hash": ""
+  },
+  "core/docx_filler_wad.py": {
+    "mtime": 1787808556.148528,
+    "seen": 1791268242.4740324,
+    "ast_hash": "0e058f9f4b1f166d62046a1d8ae7dcde",
+    "semantic_hash": ""
+  },
+  "core/docx_utils.py": {
+    "mtime": 1787808556.148528,
+    "seen": 1791268242.4740334,
+    "ast_hash": "a935e7ff8fb3c06a1af1021aafa7589d",
+    "semantic_hash": ""
+  },
+  "core/pm_db.py": {
+    "mtime": 1791269745.2468643,
+    "seen": 1791269917.691551,
+    "ast_hash": "6b8af114881c265ecc948c32e129238b",
+    "semantic_hash": ""
+  },
+  "core/progress_export.py": {
+    "mtime": 1791268878.3998718,
+    "seen": 1791268996.785392,
+    "ast_hash": "c33fb887eae231df9ab8792f4caf5a30",
+    "semantic_hash": ""
+  },
+  "static/number-to-words.js": {
+    "mtime": 1787046453.5020232,
+    "seen": 1791268242.4740362,
+    "ast_hash": "a48dffefa08caaf3e31c66f4cca268c3",
+    "semantic_hash": ""
+  },
+  "static/progress_tracker.js": {
+    "mtime": 1791268934.3505435,
+    "seen": 1791268996.785394,
+    "ast_hash": "4a2dfa47d89101d31b83279dab803da1",
+    "semantic_hash": ""
+  },
+  "static/progress_tracker_projects.js": {
+    "mtime": 1787808556.1556065,
+    "seen": 1791268242.4740381,
+    "ast_hash": "8bb69b9e31140c51946516e87785794d",
+    "semantic_hash": ""
+  },
+  "static/project.js": {
+    "mtime": 1787808556.1556065,
+    "seen": 1791268242.474039,
+    "ast_hash": "f50f31d7d73e756456c8e98abd0fe564",
+    "semantic_hash": ""
+  },
+  "static/script.js": {
+    "mtime": 1787046453.5020232,
+    "seen": 1791268242.4740398,
+    "ast_hash": "08bc9aa85933baccfa7401bcfbf5811b",
+    "semantic_hash": ""
+  },
+  "static/wad.js": {
+    "mtime": 1787046453.5020232,
+    "seen": 1791268242.4740405,
+    "ast_hash": "c81bfbbe5f82deb862a1377e4df796bf",
+    "semantic_hash": ""
+  },
+  ".github/workflows/deploy-ec2.yml": {
+    "mtime": 1790556592.886448,
+    "seen": 1791268242.4740417,
+    "ast_hash": "0bcdfb7cb9495dfe68e3fc04bd45dc57",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1790556354.1893892,
+    "seen": 1791268242.4740424,
+    "ast_hash": "7799f0658eb5587fea34c65ac94c30fd",
+    "semantic_hash": ""
+  },
+  "docker-compose.edge.yml": {
+    "mtime": 1790556354.1893892,
+    "seen": 1791268242.4740431,
+    "ast_hash": "8713061ba7959c5ce44edf16b5954260",
+    "semantic_hash": ""
+  },
+  "docker-compose.yml": {
+    "mtime": 1790556354.1903899,
+    "seen": 1791268242.4740438,
+    "ast_hash": "0912057e5e6bf97c721b5ec81e56ecda",
+    "semantic_hash": ""
+  },
+  "requirements.txt": {
+    "mtime": 1789441055.5233805,
+    "seen": 1791268242.4740446,
+    "ast_hash": "c8d91847a465ed89e400342b8f4cc2b9",
+    "semantic_hash": ""
+  },
+  "templates/base.html": {
+    "mtime": 1789439122.2525423,
+    "seen": 1791268242.4740455,
+    "ast_hash": "56a2c4d865e08acb45c1eadb2a2011b2",
+    "semantic_hash": ""
+  },
+  "templates/index.html": {
+    "mtime": 1787046453.5020232,
+    "seen": 1791268242.4740462,
+    "ast_hash": "02ab0b66897e69b5c80e71895d389a02",
+    "semantic_hash": ""
+  },
+  "templates/login.html": {
+    "mtime": 1789439128.5210123,
+    "seen": 1791268242.4740472,
+    "ast_hash": "f2aacf1f4309eeeef2ab781e908fc63b",
+    "semantic_hash": ""
+  },
+  "templates/progress_tracker.html": {
+    "mtime": 1787808556.1587858,
+    "seen": 1791268242.4740481,
+    "ast_hash": "154ef35a1bb63663b05b8fbce4a5d6af",
+    "semantic_hash": ""
+  },
+  "templates/progress_tracker_detail.html": {
+    "mtime": 1791268912.2148793,
+    "seen": 1791268996.785407,
+    "ast_hash": "22bf4a45171f8cc12f0daf4a6a77640a",
+    "semantic_hash": ""
+  },
+  "templates/project_management.html": {
+    "mtime": 1787808556.1587858,
+    "seen": 1791268242.4740498,
+    "ast_hash": "7088d96b95d485b01ae7e464812583a0",
+    "semantic_hash": ""
+  },
+  "templates/working_advance.html": {
+    "mtime": 1787046453.5020232,
+    "seen": 1791268242.4740505,
+    "ast_hash": "d3458c6fd8d994b494ec594541598359",
+    "semantic_hash": ""
+  },
+  "version_info.txt": {
+    "mtime": 1787046453.5157135,
+    "seen": 1791268242.4740515,
+    "ast_hash": "d9c092dd524b55e93f23d4a88c122e30",
+    "semantic_hash": ""
+  }
+}

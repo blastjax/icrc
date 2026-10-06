@@ -19,7 +19,7 @@
         <button type="button" class="btn-secondary" id="pt-import-btn">Upload BOQ File</button>
         <input type="file" id="pt-import-input" accept=".txt,.tsv,.csv" hidden />
         <a class="btn-secondary" href="{{ url_for('api_export_progress_excel', project_id=project.id) }}">Export Excel</a>
-        <a class="btn-secondary" href="{{ url_for('api_export_progress_pdf', project_id=project.id) }}">Export PDF</a>
+        <button type="button" class="btn-secondary" id="pt-export-pdf-btn">Export PDF</button>
         <button type="button" class="btn-secondary pt-delete-project-btn" id="pt-delete-project-btn">Delete Project</button>
       </div>
     </header>
@@ -48,6 +48,20 @@
         <button type="button" class="pm-modal-close" id="pt-subcat-modal-close" aria-label="Close">&times;</button>
       </div>
       <div class="pm-modal-body" id="pt-subcat-modal-body"></div>
+    </div>
+  </div>
+
+  <div class="pm-modal-overlay" id="pt-pdf-modal-overlay">
+    <div class="pm-modal pt-pdf-modal">
+      <div class="pm-modal-header">
+        <span class="pt-subcat-modal-title">Export PDF — choose weeks</span>
+        <button type="button" class="pm-modal-close" id="pt-pdf-modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="pm-modal-body" id="pt-pdf-modal-body"></div>
+      <div class="pm-modal-footer">
+        <label class="pt-pdf-week"><input type="checkbox" id="pt-pdf-select-all" /> Select all</label>
+        <button type="button" class="btn-primary" id="pt-pdf-download-btn">Download PDF</button>
+      </div>
     </div>
   </div>
 {% endblock %}

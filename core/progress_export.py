@@ -13,7 +13,11 @@ Completion" card and per-category cards shown on the web page, before the
 table. Both cards mirror the web page's math exactly (see
 computeGroupProgress / severityFor in progress_tracker.js): a group's
 percent is the latest week's weighted-to-date cost divided by the group's
-total % Project Cost — not summed across every week.
+total % Project Cost — not summed across every week. Its table has a single
+Progress % column per week, headed by the week's label when it has one (as
+on the web page); the weighted figure appears only as that column's TOTAL.
+It can be limited to chosen weeks, in which case "latest week" means the
+latest chosen one.
 """
 
 from __future__ import annotations
@@ -453,7 +457,15 @@ def _build_category_cards_grid(items: list[dict], weeks: list[dict], page_width:
     return grid
 
 
-def build_pdf(project: dict, weeks: list[dict], items: list[dict]) -> io.BytesIO:
+def build_pdf(
+    project: dict, weeks: list[dict], items: list[dict], week_ids: set[str] | None = None
+) -> io.BytesIO:
+    # Numbered before filtering, so a chosen week keeps its "Week NN" number.
+    numbered_weeks = [
+        (idx, week) for idx, week in enumerate(weeks, start=1) if week_ids is None or week["id"] in week_ids
+    ]
+    weeks = [week for _, week in numbered_weeks]
+
     buf = io.BytesIO()
     doc = SimpleDocTemplate(
         buf, pagesize=landscape(A4), leftMargin=18, rightMargin=18, topMargin=18, bottomMargin=18
@@ -511,16 +523,12 @@ def build_pdf(project: dict, weeks: list[dict], items: list[dict]) -> io.BytesIO
     n_static = len(STATIC_HEADERS)
     header_row1 = [header_paragraph(h) for h in STATIC_HEADERS]
     header_row2 = [""] * n_static
-    for idx, week in enumerate(weeks, start=1):
-        header_row1.extend([header_paragraph(_week_title(idx, week)), ""])
-        header_row2.extend([header_paragraph("Progress %"), header_paragraph("Weighted %")])
+    for idx, week in numbered_weeks:
+        header_row1.append(header_paragraph(week.get("label") or f"Week {idx:02d} Progress %"))
+        header_row2.append(header_paragraph("Progress %"))
 
     data = [header_row1, header_row2]
     span_commands = [("SPAN", (c, 0), (c, 1)) for c in range(n_static)]
-    col = n_static
-    for _ in weeks:
-        span_commands.append(("SPAN", (col, 0), (col + 1, 0)))
-        col += 2
 
     style_commands = [
         ("BACKGROUND", (0, 0), (-1, 1), colors.HexColor(f"#{HEADER_BG}")),
@@ -546,10 +554,8 @@ def build_pdf(project: dict, weeks: list[dict], items: list[dict]) -> io.BytesIO
             row += [item.get("unit") or "", item.get("suggested_quantity") or 0, cost]
             cost_total += cost
             for w_idx, week in enumerate(weeks):
-                percent = (item.get("entries") or {}).get(week["id"], 0) or 0
-                weighted = _weighted(item, week["id"])
-                week_totals[w_idx] += weighted
-                row += [percent, round(weighted, 2)]
+                week_totals[w_idx] += _weighted(item, week["id"])
+                row.append((item.get("entries") or {}).get(week["id"], 0) or 0)
         else:
             if item.get("level") == LEVEL_CATEGORY:
                 bg = colors.HexColor(f"#{CATEGORY_BG}")
@@ -557,7 +563,7 @@ def build_pdf(project: dict, weeks: list[dict], items: list[dict]) -> io.BytesIO
             else:
                 bg = colors.HexColor(f"#{SUBCATEGORY_BG}")
                 desc_para = Paragraph(description, desc_subcategory_style)
-            row = [item.get("code") or "", desc_para] + ["", "", ""] + ["", ""] * len(weeks)
+            row = [item.get("code") or "", desc_para] + ["", "", ""] + [""] * len(weeks)
             fg = desc_para.style.textColor
             style_commands.append(("BACKGROUND", (0, r), (-1, r), bg))
             style_commands.append(("TEXTCOLOR", (0, r), (0, r), fg))
@@ -566,17 +572,14 @@ def build_pdf(project: dict, weeks: list[dict], items: list[dict]) -> io.BytesIO
         data.append(row)
 
     total_row_idx = len(data)
-    total_row = ["TOTAL", "", "", "", round(cost_total, 2)]
-    for w_idx in range(len(weeks)):
-        total_row += ["", round(week_totals[w_idx], 2)]
+    total_row = ["TOTAL", "", "", "", round(cost_total, 2)] + [round(t, 2) for t in week_totals]
     data.append(total_row)
     style_commands.append(("SPAN", (0, total_row_idx), (3, total_row_idx)))
     style_commands.append(("FONTNAME", (0, total_row_idx), (-1, total_row_idx), "Helvetica-Bold"))
 
     fixed_widths = [page_width * f for f in (0.05, 0.28, 0.05, 0.07, 0.07)]
     remaining = page_width - sum(fixed_widths)
-    week_col_count = max(1, len(weeks) * 2)
-    col_widths = fixed_widths + [remaining / week_col_count] * (len(weeks) * 2)
+    col_widths = fixed_widths + [remaining / max(1, len(weeks))] * len(weeks)
 
     table = Table(data, repeatRows=2, colWidths=col_widths)
     table.setStyle(TableStyle(style_commands))

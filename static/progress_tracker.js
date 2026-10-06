@@ -9,8 +9,8 @@
    always a prefix of its children's, and numeric runs sort by value rather
    than as text).
 
-   As many "Week N Progress %" columns as needed can be added, each labeled
-   with its own date range. A "Total" column sums, per row, (Week n / 100 *
+   As many "Week N Progress %" columns as needed can be added; giving one a
+   label (its date range) replaces that default title. A "Total" column sums, per row, (Week n / 100 *
    % Project Cost) across every week. The footer totals % Project Cost and
    the same weighted computation per week (not the raw entered percentages).
    Persisted server-side via /api/progress/* (SQLite-backed, see pm_db.py).
@@ -53,6 +53,12 @@
   const importBtn = document.getElementById("pt-import-btn");
   const importInput = document.getElementById("pt-import-input");
   const deleteProjectBtn = document.getElementById("pt-delete-project-btn");
+  const exportPdfBtn = document.getElementById("pt-export-pdf-btn");
+  const pdfModalOverlay = document.getElementById("pt-pdf-modal-overlay");
+  const pdfModalBody = document.getElementById("pt-pdf-modal-body");
+  const pdfModalClose = document.getElementById("pt-pdf-modal-close");
+  const pdfSelectAll = document.getElementById("pt-pdf-select-all");
+  const pdfDownloadBtn = document.getElementById("pt-pdf-download-btn");
   const projectTitleEl = document.getElementById("pt-project-title");
 
   let weeks = [];
@@ -372,7 +378,10 @@
     if (e.target === subcatModalOverlay) closeSubcategoryModal();
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeSubcategoryModal();
+    if (e.key === "Escape") {
+      closeSubcategoryModal();
+      closePdfModal();
+    }
   });
 
   // ---- Overall project completion ----
@@ -433,6 +442,11 @@
     return weeks.indexOf(week);
   }
 
+  // A label (e.g. "01 October 2026") replaces the default title outright.
+  function weekTitle(week) {
+    return week.label || `Week ${weekIndex(week) + 1} Progress %`;
+  }
+
   function renderHead() {
     headRow.innerHTML = `
       <th class="pt-col-item">Item</th>
@@ -458,14 +472,9 @@
 
     const titleEl = document.createElement("div");
     titleEl.className = "pt-week-title";
-    titleEl.textContent = `Week ${weekIndex(week) + 1} Progress %`;
-
-    const labelEl = document.createElement("div");
-    labelEl.className = "pt-week-label";
-    labelEl.textContent = week.label || "";
+    titleEl.textContent = weekTitle(week);
 
     th.appendChild(titleEl);
-    th.appendChild(labelEl);
     th.ondblclick = () => startEditWeek(th, week);
   }
 
@@ -889,6 +898,59 @@
   addSubcategoryBtn.addEventListener("click", () => addItem(LEVEL_SUBCATEGORY));
   addItemBtn.addEventListener("click", () => addItem(LEVEL_ITEM));
   addWeekBtn.addEventListener("click", addWeek);
+
+  // ---- Export PDF ----
+  // Asks which weeks to include (all checked by default) before downloading.
+
+  function pdfWeekBoxes() {
+    return [...pdfModalBody.querySelectorAll("input[type=checkbox]")];
+  }
+
+  function syncPdfControls() {
+    const boxes = pdfWeekBoxes();
+    const checked = boxes.filter((b) => b.checked).length;
+    pdfSelectAll.checked = checked === boxes.length;
+    pdfSelectAll.indeterminate = checked > 0 && checked < boxes.length;
+    pdfDownloadBtn.disabled = boxes.length > 0 && checked === 0;
+  }
+
+  function openPdfModal() {
+    pdfModalBody.innerHTML = "";
+    weeks.forEach((week) => {
+      const label = document.createElement("label");
+      label.className = "pt-pdf-week";
+      const box = document.createElement("input");
+      box.type = "checkbox";
+      box.value = week.id;
+      box.checked = true;
+      box.addEventListener("change", syncPdfControls);
+      label.append(box, weekTitle(week));
+      pdfModalBody.appendChild(label);
+    });
+    if (!weeks.length) pdfModalBody.textContent = "No weeks yet — the PDF will include the items only.";
+    syncPdfControls();
+    pdfModalOverlay.classList.add("open");
+  }
+
+  function closePdfModal() {
+    pdfModalOverlay.classList.remove("open");
+  }
+
+  exportPdfBtn.addEventListener("click", openPdfModal);
+  pdfModalClose.addEventListener("click", closePdfModal);
+  pdfModalOverlay.addEventListener("click", (e) => {
+    if (e.target === pdfModalOverlay) closePdfModal();
+  });
+  pdfSelectAll.addEventListener("change", () => {
+    pdfWeekBoxes().forEach((b) => (b.checked = pdfSelectAll.checked));
+    syncPdfControls();
+  });
+  pdfDownloadBtn.addEventListener("click", () => {
+    const ids = pdfWeekBoxes().filter((b) => b.checked).map((b) => b.value);
+    const query = new URLSearchParams({ weeks: ids.join(",") });
+    window.location.href = `/api/progress/projects/${PROJECT_ID}/export/pdf?${query}`;
+    closePdfModal();
+  });
 
   // ---- Upload BOQ file ----
   // Replaces this project's entire tracker (categories, subcategories,
