@@ -22,8 +22,8 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 18,
-      "community_name": "_PooledConnection",
+      "community": 1,
+      "community_name": "pm_db.py",
       "file_type": "code",
       "norm_label": "_pooledconnection",
       "source_file": "core/pm_db.py",
@@ -656,30 +656,6 @@
       "source_location": "L103"
     },
     {
-      "id": "app_api_create_column",
-      "label": "api_create_column()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "pm_db.py",
-      "file_type": "code",
-      "norm_label": "api_create_column()",
-      "source_file": "app.py",
-      "source_location": "L169"
-    },
-    {
-      "id": "app_api_update_progress_item",
-      "label": "api_update_progress_item()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "pm_db.py",
-      "file_type": "code",
-      "norm_label": "api_update_progress_item()",
-      "source_file": "app.py",
-      "source_location": "L495"
-    },
-    {
       "id": "core_pm_db_attach_custom_fields",
       "label": "_attach_custom_fields()",
       "_callable": true,
@@ -704,6 +680,18 @@
       "source_location": "L791"
     },
     {
+      "id": "core_pm_db_checkout",
+      "label": "_checkout()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "_checkout()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L211"
+    },
+    {
       "id": "core_pm_db_conn_commit",
       "label": ".commit()",
       "_callable": true,
@@ -716,16 +704,28 @@
       "source_location": "L95"
     },
     {
-      "id": "core_pm_db_conn_execute",
-      "label": ".execute()",
+      "id": "core_pm_db_conn_init",
+      "label": ".__init__()",
       "_callable": true,
       "_origin": "ast",
       "community": 1,
       "community_name": "pm_db.py",
       "file_type": "code",
-      "norm_label": ".execute()",
+      "norm_label": ".__init__()",
       "source_file": "core/pm_db.py",
-      "source_location": "L92"
+      "source_location": "L89"
+    },
+    {
+      "id": "core_pm_db_connect",
+      "label": "_connect()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "_connect()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L226"
     },
     {
       "id": "core_pm_db_create_column",
@@ -740,6 +740,78 @@
       "source_location": "L320"
     },
     {
+      "id": "core_pm_db_create_custom_field",
+      "label": "create_custom_field()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "create_custom_field()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L484"
+    },
+    {
+      "id": "core_pm_db_create_field_row",
+      "label": "create_field_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "create_field_row()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L514"
+    },
+    {
+      "id": "core_pm_db_create_payment_row",
+      "label": "create_payment_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "create_payment_row()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L562"
+    },
+    {
+      "id": "core_pm_db_create_progress_item",
+      "label": "create_progress_item()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "create_progress_item()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L833"
+    },
+    {
+      "id": "core_pm_db_create_progress_project",
+      "label": "create_progress_project()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "create_progress_project()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L676"
+    },
+    {
+      "id": "core_pm_db_create_progress_week",
+      "label": "create_progress_week()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "create_progress_week()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L763"
+    },
+    {
       "id": "core_pm_db_create_task",
       "label": "create_task()",
       "_callable": true,
@@ -750,6 +822,102 @@
       "norm_label": "create_task()",
       "source_file": "core/pm_db.py",
       "source_location": "L344"
+    },
+    {
+      "id": "core_pm_db_delete_column",
+      "label": "delete_column()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "delete_column()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L296"
+    },
+    {
+      "id": "core_pm_db_delete_custom_field",
+      "label": "delete_custom_field()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "delete_custom_field()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L507"
+    },
+    {
+      "id": "core_pm_db_delete_field_row",
+      "label": "delete_field_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "delete_field_row()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L548"
+    },
+    {
+      "id": "core_pm_db_delete_payment_row",
+      "label": "delete_payment_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "delete_payment_row()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L625"
+    },
+    {
+      "id": "core_pm_db_delete_progress_item",
+      "label": "delete_progress_item()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "delete_progress_item()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L889"
+    },
+    {
+      "id": "core_pm_db_delete_progress_project",
+      "label": "delete_progress_project()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "delete_progress_project()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L691"
+    },
+    {
+      "id": "core_pm_db_delete_progress_week",
+      "label": "delete_progress_week()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "delete_progress_week()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L784"
+    },
+    {
+      "id": "core_pm_db_delete_task",
+      "label": "delete_task()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "delete_task()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L473"
     },
     {
       "id": "core_pm_db_duplicate_task",
@@ -764,6 +932,18 @@
       "source_location": "L411"
     },
     {
+      "id": "core_pm_db_init_db",
+      "label": "init_db()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "init_db()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L99"
+    },
+    {
       "id": "core_pm_db_insert_task",
       "label": "_insert_task()",
       "_callable": true,
@@ -774,6 +954,42 @@
       "norm_label": "_insert_task()",
       "source_file": "core/pm_db.py",
       "source_location": "L239"
+    },
+    {
+      "id": "core_pm_db_list_columns",
+      "label": "list_columns()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "list_columns()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L282"
+    },
+    {
+      "id": "core_pm_db_list_payment_rows",
+      "label": "list_payment_rows()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "list_payment_rows()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L554"
+    },
+    {
+      "id": "core_pm_db_list_progress_projects",
+      "label": "list_progress_projects()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "list_progress_projects()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L631"
     },
     {
       "id": "core_pm_db_list_tasks",
@@ -788,6 +1004,30 @@
       "source_location": "L338"
     },
     {
+      "id": "core_pm_db_natural_code_key",
+      "label": "_natural_code_key()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "_natural_code_key()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L802"
+    },
+    {
+      "id": "core_pm_db_pooledconnection_init",
+      "label": ".__init__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": ".__init__()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L32"
+    },
+    {
       "id": "core_pm_db_relocate_task",
       "label": "_relocate_task()",
       "_callable": true,
@@ -798,6 +1038,66 @@
       "norm_label": "_relocate_task()",
       "source_file": "core/pm_db.py",
       "source_location": "L370"
+    },
+    {
+      "id": "core_pm_db_rename_column",
+      "label": "rename_column()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "rename_column()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L288"
+    },
+    {
+      "id": "core_pm_db_rename_custom_field",
+      "label": "rename_custom_field()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "rename_custom_field()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L499"
+    },
+    {
+      "id": "core_pm_db_rename_progress_project",
+      "label": "rename_progress_project()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "rename_progress_project()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L683"
+    },
+    {
+      "id": "core_pm_db_rename_progress_week",
+      "label": "rename_progress_week()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "rename_progress_week()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L776"
+    },
+    {
+      "id": "core_pm_db_reorder_columns",
+      "label": "reorder_columns()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "reorder_columns()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L312"
     },
     {
       "id": "core_pm_db_reorder_task",
@@ -812,6 +1112,30 @@
       "source_location": "L396"
     },
     {
+      "id": "core_pm_db_replace_progress_data",
+      "label": "replace_progress_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "replace_progress_data()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L707"
+    },
+    {
+      "id": "core_pm_db_set_progress_entry",
+      "label": "set_progress_entry()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "set_progress_entry()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L896"
+    },
+    {
       "id": "core_pm_db_slugify",
       "label": "_slugify()",
       "_callable": true,
@@ -822,6 +1146,30 @@
       "norm_label": "_slugify()",
       "source_file": "core/pm_db.py",
       "source_location": "L307"
+    },
+    {
+      "id": "core_pm_db_update_field_row",
+      "label": "update_field_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "update_field_row()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L529"
+    },
+    {
+      "id": "core_pm_db_update_payment_row",
+      "label": "update_payment_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "update_payment_row()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L602"
     },
     {
       "id": "core_pm_db_update_progress_item",
@@ -1001,7 +1349,7 @@
       "file_type": "code",
       "norm_label": "_invalidate_cache_on_write()",
       "source_file": "app.py",
-      "source_location": "L154"
+      "source_location": "L149"
     },
     {
       "id": "core_cache_invalidate_all",
@@ -1062,714 +1410,6 @@
       "norm_label": "updatewordsfromtotalamountph()",
       "source_file": "static/script.js",
       "source_location": "L3"
-    },
-    {
-      "id": "app_api_create_payment_row",
-      "label": "api_create_payment_row()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "api_create_payment_row()",
-      "source_file": "app.py",
-      "source_location": "L327"
-    },
-    {
-      "id": "app_api_create_progress_item",
-      "label": "api_create_progress_item()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "api_create_progress_item()",
-      "source_file": "app.py",
-      "source_location": "L485"
-    },
-    {
-      "id": "app_api_create_progress_project",
-      "label": "api_create_progress_project()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "api_create_progress_project()",
-      "source_file": "app.py",
-      "source_location": "L365"
-    },
-    {
-      "id": "app_api_delete_custom_field",
-      "label": "api_delete_custom_field()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "api_delete_custom_field()",
-      "source_file": "app.py",
-      "source_location": "L289"
-    },
-    {
-      "id": "app_api_delete_payment_row",
-      "label": "api_delete_payment_row()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "api_delete_payment_row()",
-      "source_file": "app.py",
-      "source_location": "L354"
-    },
-    {
-      "id": "app_api_delete_progress_item",
-      "label": "api_delete_progress_item()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "api_delete_progress_item()",
-      "source_file": "app.py",
-      "source_location": "L512"
-    },
-    {
-      "id": "app_api_delete_progress_project",
-      "label": "api_delete_progress_project()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "api_delete_progress_project()",
-      "source_file": "app.py",
-      "source_location": "L386"
-    },
-    {
-      "id": "app_api_delete_progress_week",
-      "label": "api_delete_progress_week()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "api_delete_progress_week()",
-      "source_file": "app.py",
-      "source_location": "L474"
-    },
-    {
-      "id": "core_pm_db_connect",
-      "label": "_connect()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "_connect()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L226"
-    },
-    {
-      "id": "core_pm_db_create_payment_row",
-      "label": "create_payment_row()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "create_payment_row()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L562"
-    },
-    {
-      "id": "core_pm_db_create_progress_item",
-      "label": "create_progress_item()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "create_progress_item()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L833"
-    },
-    {
-      "id": "core_pm_db_create_progress_project",
-      "label": "create_progress_project()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "create_progress_project()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L676"
-    },
-    {
-      "id": "core_pm_db_delete_custom_field",
-      "label": "delete_custom_field()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "delete_custom_field()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L507"
-    },
-    {
-      "id": "core_pm_db_delete_payment_row",
-      "label": "delete_payment_row()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "delete_payment_row()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L625"
-    },
-    {
-      "id": "core_pm_db_delete_progress_item",
-      "label": "delete_progress_item()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "delete_progress_item()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L889"
-    },
-    {
-      "id": "core_pm_db_delete_progress_project",
-      "label": "delete_progress_project()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "delete_progress_project()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L691"
-    },
-    {
-      "id": "core_pm_db_delete_progress_week",
-      "label": "delete_progress_week()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "delete_progress_week()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L784"
-    },
-    {
-      "id": "core_pm_db_init_db",
-      "label": "init_db()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "init_db()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L99"
-    },
-    {
-      "id": "core_pm_db_list_columns",
-      "label": "list_columns()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "list_columns()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L282"
-    },
-    {
-      "id": "core_pm_db_list_progress_projects",
-      "label": "list_progress_projects()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "code",
-      "norm_label": "list_progress_projects()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L631"
-    },
-    {
-      "id": "app_api_create_progress_week",
-      "label": "api_create_progress_week()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_create_progress_week()",
-      "source_file": "app.py",
-      "source_location": "L457"
-    },
-    {
-      "id": "app_api_create_task",
-      "label": "api_create_task()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_create_task()",
-      "source_file": "app.py",
-      "source_location": "L215"
-    },
-    {
-      "id": "app_api_duplicate_task",
-      "label": "api_duplicate_task()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_duplicate_task()",
-      "source_file": "app.py",
-      "source_location": "L257"
-    },
-    {
-      "id": "app_api_list_columns",
-      "label": "api_list_columns()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_list_columns()",
-      "source_file": "app.py",
-      "source_location": "L164"
-    },
-    {
-      "id": "app_api_list_progress_projects",
-      "label": "api_list_progress_projects()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_list_progress_projects()",
-      "source_file": "app.py",
-      "source_location": "L360"
-    },
-    {
-      "id": "app_api_list_tasks",
-      "label": "api_list_tasks()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_list_tasks()",
-      "source_file": "app.py",
-      "source_location": "L210"
-    },
-    {
-      "id": "app_api_move_task",
-      "label": "api_move_task()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_move_task()",
-      "source_file": "app.py",
-      "source_location": "L238"
-    },
-    {
-      "id": "app_api_rename_custom_field",
-      "label": "api_rename_custom_field()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_rename_custom_field()",
-      "source_file": "app.py",
-      "source_location": "L277"
-    },
-    {
-      "id": "app_api_set_progress_entry",
-      "label": "api_set_progress_entry()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_set_progress_entry()",
-      "source_file": "app.py",
-      "source_location": "L518"
-    },
-    {
-      "id": "app_api_update_task",
-      "label": "api_update_task()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "api_update_task()",
-      "source_file": "app.py",
-      "source_location": "L224"
-    },
-    {
-      "id": "app_index",
-      "label": "index()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "index()",
-      "source_file": "app.py",
-      "source_location": "L119"
-    },
-    {
-      "id": "app_job_order",
-      "label": "job_order()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "job_order()",
-      "source_file": "app.py",
-      "source_location": "L139"
-    },
-    {
-      "id": "app_progress_tracker",
-      "label": "progress_tracker()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "progress_tracker()",
-      "source_file": "app.py",
-      "source_location": "L134"
-    },
-    {
-      "id": "app_project_management",
-      "label": "project_management()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "project_management()",
-      "source_file": "app.py",
-      "source_location": "L129"
-    },
-    {
-      "id": "app_working_advance",
-      "label": "working_advance()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "working_advance()",
-      "source_file": "app.py",
-      "source_location": "L124"
-    },
-    {
-      "id": "core_cache_get_or_set",
-      "label": "get_or_set()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "get_or_set()",
-      "source_file": "core/cache.py",
-      "source_location": "L18"
-    },
-    {
-      "id": "core_pm_db_create_progress_week",
-      "label": "create_progress_week()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "create_progress_week()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L763"
-    },
-    {
-      "id": "core_pm_db_rename_custom_field",
-      "label": "rename_custom_field()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "rename_custom_field()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L499"
-    },
-    {
-      "id": "core_pm_db_set_progress_entry",
-      "label": "set_progress_entry()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "set_progress_entry()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L896"
-    },
-    {
-      "id": "static_job_order_addrow",
-      "label": "addRow()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "addrow()",
-      "source_file": "static/job_order.js",
-      "source_location": "L80"
-    },
-    {
-      "id": "static_job_order_capture",
-      "label": "capture()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "capture()",
-      "source_file": "static/job_order.js",
-      "source_location": "L264"
-    },
-    {
-      "id": "static_job_order_el",
-      "label": "el()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "el()",
-      "source_file": "static/job_order.js",
-      "source_location": "L62"
-    },
-    {
-      "id": "static_job_order_exec",
-      "label": "exec()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "exec()",
-      "source_file": "static/job_order.js",
-      "source_location": "L210"
-    },
-    {
-      "id": "static_job_order_fileicon",
-      "label": "fileIcon()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "fileicon()",
-      "source_file": "static/job_order.js",
-      "source_location": "L43"
-    },
-    {
-      "id": "static_job_order_filename",
-      "label": "fileName()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "filename()",
-      "source_file": "static/job_order.js",
-      "source_location": "L270"
-    },
-    {
-      "id": "static_job_order_formatsize",
-      "label": "formatSize()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "formatsize()",
-      "source_file": "static/job_order.js",
-      "source_location": "L72"
-    },
-    {
-      "id": "static_job_order_recipients",
-      "label": "recipients()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "recipients()",
-      "source_file": "static/job_order.js",
-      "source_location": "L89"
-    },
-    {
-      "id": "static_job_order_render",
-      "label": "render()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "render()",
-      "source_file": "static/job_order.js",
-      "source_location": "L135"
-    },
-    {
-      "id": "static_job_order_renderattachments",
-      "label": "renderAttachments()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "renderattachments()",
-      "source_file": "static/job_order.js",
-      "source_location": "L112"
-    },
-    {
-      "id": "static_job_order_renderrecipients",
-      "label": "renderRecipients()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "renderrecipients()",
-      "source_file": "static/job_order.js",
-      "source_location": "L100"
-    },
-    {
-      "id": "static_job_order_showmessage",
-      "label": "showMessage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "showmessage()",
-      "source_file": "static/job_order.js",
-      "source_location": "L259"
-    },
-    {
-      "id": "static_job_order_updatetoolbarstate",
-      "label": "updateToolbarState()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "updatetoolbarstate()",
-      "source_file": "static/job_order.js",
-      "source_location": "L196"
-    },
-    {
-      "id": "static_job_order_withbutton",
-      "label": "withButton()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "withbutton()",
-      "source_file": "static/job_order.js",
-      "source_location": "L275"
-    },
-    {
-      "id": "core_pm_db_checkout",
-      "label": "_checkout()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "_PooledConnection",
-      "file_type": "code",
-      "norm_label": "_checkout()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L211"
-    },
-    {
-      "id": "core_pm_db_conn_init",
-      "label": ".__init__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "_PooledConnection",
-      "file_type": "code",
-      "norm_label": ".__init__()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L89"
-    },
-    {
-      "id": "core_pm_db_pooledconnection_init",
-      "label": ".__init__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "_PooledConnection",
-      "file_type": "code",
-      "norm_label": ".__init__()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L32"
-    },
-    {
-      "id": "app_api_list_progress_items",
-      "label": "api_list_progress_items()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "list_progress_items",
-      "file_type": "code",
-      "norm_label": "api_list_progress_items()",
-      "source_file": "app.py",
-      "source_location": "L480"
-    },
-    {
-      "id": "core_pm_db_list_progress_items",
-      "label": "list_progress_items()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "list_progress_items",
-      "file_type": "code",
-      "norm_label": "list_progress_items()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L809"
-    },
-    {
-      "id": "core_pm_db_natural_code_key",
-      "label": "_natural_code_key()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "list_progress_items",
-      "file_type": "code",
-      "norm_label": "_natural_code_key()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L802"
     },
     {
       "id": "static_project_addpaymentrow",
@@ -2204,244 +1844,28 @@
       "source_location": "L492"
     },
     {
-      "id": "app_api_create_custom_field",
-      "label": "api_create_custom_field()",
+      "id": "core_docx_filler_fill_template",
+      "label": "fill_template()",
       "_callable": true,
       "_origin": "ast",
-      "community": 20,
-      "community_name": "api_create_custom_field",
+      "community": 3,
+      "community_name": "docx_filler_wad.py",
       "file_type": "code",
-      "norm_label": "api_create_custom_field()",
-      "source_file": "app.py",
-      "source_location": "L265"
+      "norm_label": "fill_template()",
+      "source_file": "core/docx_filler.py",
+      "source_location": "L63"
     },
     {
-      "id": "core_pm_db_create_custom_field",
-      "label": "create_custom_field()",
+      "id": "core_docx_filler_prepare_replacements",
+      "label": "prepare_replacements()",
       "_callable": true,
       "_origin": "ast",
-      "community": 20,
-      "community_name": "api_create_custom_field",
+      "community": 3,
+      "community_name": "docx_filler_wad.py",
       "file_type": "code",
-      "norm_label": "create_custom_field()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L484"
-    },
-    {
-      "id": "app_api_create_field_row",
-      "label": "api_create_field_row()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "api_create_field_row",
-      "file_type": "code",
-      "norm_label": "api_create_field_row()",
-      "source_file": "app.py",
-      "source_location": "L295"
-    },
-    {
-      "id": "core_pm_db_create_field_row",
-      "label": "create_field_row()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "api_create_field_row",
-      "file_type": "code",
-      "norm_label": "create_field_row()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L514"
-    },
-    {
-      "id": "app_api_delete_column",
-      "label": "api_delete_column()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 22,
-      "community_name": "api_delete_column",
-      "file_type": "code",
-      "norm_label": "api_delete_column()",
-      "source_file": "app.py",
-      "source_location": "L199"
-    },
-    {
-      "id": "core_pm_db_delete_column",
-      "label": "delete_column()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 22,
-      "community_name": "api_delete_column",
-      "file_type": "code",
-      "norm_label": "delete_column()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L296"
-    },
-    {
-      "id": "app_api_delete_field_row",
-      "label": "api_delete_field_row()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "api_delete_field_row",
-      "file_type": "code",
-      "norm_label": "api_delete_field_row()",
-      "source_file": "app.py",
-      "source_location": "L316"
-    },
-    {
-      "id": "core_pm_db_delete_field_row",
-      "label": "delete_field_row()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "api_delete_field_row",
-      "file_type": "code",
-      "norm_label": "delete_field_row()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L548"
-    },
-    {
-      "id": "app_api_delete_task",
-      "label": "api_delete_task()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 24,
-      "community_name": "api_delete_task",
-      "file_type": "code",
-      "norm_label": "api_delete_task()",
-      "source_file": "app.py",
-      "source_location": "L251"
-    },
-    {
-      "id": "core_pm_db_delete_task",
-      "label": "delete_task()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 24,
-      "community_name": "api_delete_task",
-      "file_type": "code",
-      "norm_label": "delete_task()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L473"
-    },
-    {
-      "id": "app_api_list_payment_rows",
-      "label": "api_list_payment_rows()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "api_list_payment_rows",
-      "file_type": "code",
-      "norm_label": "api_list_payment_rows()",
-      "source_file": "app.py",
-      "source_location": "L322"
-    },
-    {
-      "id": "core_pm_db_list_payment_rows",
-      "label": "list_payment_rows()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "api_list_payment_rows",
-      "file_type": "code",
-      "norm_label": "list_payment_rows()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L554"
-    },
-    {
-      "id": "app_api_rename_column",
-      "label": "api_rename_column()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 26,
-      "community_name": "api_rename_column",
-      "file_type": "code",
-      "norm_label": "api_rename_column()",
-      "source_file": "app.py",
-      "source_location": "L187"
-    },
-    {
-      "id": "core_pm_db_rename_column",
-      "label": "rename_column()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 26,
-      "community_name": "api_rename_column",
-      "file_type": "code",
-      "norm_label": "rename_column()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L288"
-    },
-    {
-      "id": "app_api_rename_progress_project",
-      "label": "api_rename_progress_project()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "api_rename_progress_project",
-      "file_type": "code",
-      "norm_label": "api_rename_progress_project()",
-      "source_file": "app.py",
-      "source_location": "L374"
-    },
-    {
-      "id": "core_pm_db_rename_progress_project",
-      "label": "rename_progress_project()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 27,
-      "community_name": "api_rename_progress_project",
-      "file_type": "code",
-      "norm_label": "rename_progress_project()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L683"
-    },
-    {
-      "id": "app_api_rename_progress_week",
-      "label": "api_rename_progress_week()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "api_rename_progress_week",
-      "file_type": "code",
-      "norm_label": "api_rename_progress_week()",
-      "source_file": "app.py",
-      "source_location": "L464"
-    },
-    {
-      "id": "core_pm_db_rename_progress_week",
-      "label": "rename_progress_week()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "api_rename_progress_week",
-      "file_type": "code",
-      "norm_label": "rename_progress_week()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L776"
-    },
-    {
-      "id": "app_api_reorder_columns",
-      "label": "api_reorder_columns()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "api_reorder_columns",
-      "file_type": "code",
-      "norm_label": "api_reorder_columns()",
-      "source_file": "app.py",
-      "source_location": "L178"
-    },
-    {
-      "id": "core_pm_db_reorder_columns",
-      "label": "reorder_columns()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "api_reorder_columns",
-      "file_type": "code",
-      "norm_label": "reorder_columns()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L312"
+      "norm_label": "prepare_replacements()",
+      "source_file": "core/docx_filler.py",
+      "source_location": "L39"
     },
     {
       "id": "core_docx_filler_wad_fill_extra_swa_rows",
@@ -2552,6 +1976,18 @@
       "source_location": "L147"
     },
     {
+      "id": "core_docx_utils_format_date",
+      "label": "format_date()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "docx_filler_wad.py",
+      "file_type": "code",
+      "norm_label": "format_date()",
+      "source_file": "core/docx_utils.py",
+      "source_location": "L17"
+    },
+    {
       "id": "core_docx_utils_format_date_dmy",
       "label": "format_date_dmy()",
       "_callable": true,
@@ -2612,52 +2048,208 @@
       "source_location": "L91"
     },
     {
-      "id": "app_api_update_field_row",
-      "label": "api_update_field_row()",
+      "id": "app_api_create_column",
+      "label": "api_create_column()",
       "_callable": true,
       "_origin": "ast",
-      "community": 30,
-      "community_name": "api_update_field_row",
+      "community": 4,
+      "community_name": "app.py",
       "file_type": "code",
-      "norm_label": "api_update_field_row()",
+      "norm_label": "api_create_column()",
       "source_file": "app.py",
-      "source_location": "L307"
+      "source_location": "L164"
     },
     {
-      "id": "core_pm_db_update_field_row",
-      "label": "update_field_row()",
+      "id": "app_api_create_custom_field",
+      "label": "api_create_custom_field()",
       "_callable": true,
       "_origin": "ast",
-      "community": 30,
-      "community_name": "api_update_field_row",
+      "community": 4,
+      "community_name": "app.py",
       "file_type": "code",
-      "norm_label": "update_field_row()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L529"
-    },
-    {
-      "id": "app_api_update_payment_row",
-      "label": "api_update_payment_row()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "api_update_payment_row",
-      "file_type": "code",
-      "norm_label": "api_update_payment_row()",
+      "norm_label": "api_create_custom_field()",
       "source_file": "app.py",
-      "source_location": "L335"
+      "source_location": "L260"
     },
     {
-      "id": "core_pm_db_update_payment_row",
-      "label": "update_payment_row()",
+      "id": "app_api_create_field_row",
+      "label": "api_create_field_row()",
       "_callable": true,
       "_origin": "ast",
-      "community": 31,
-      "community_name": "api_update_payment_row",
+      "community": 4,
+      "community_name": "app.py",
       "file_type": "code",
-      "norm_label": "update_payment_row()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L602"
+      "norm_label": "api_create_field_row()",
+      "source_file": "app.py",
+      "source_location": "L290"
+    },
+    {
+      "id": "app_api_create_payment_row",
+      "label": "api_create_payment_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_create_payment_row()",
+      "source_file": "app.py",
+      "source_location": "L322"
+    },
+    {
+      "id": "app_api_create_progress_item",
+      "label": "api_create_progress_item()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_create_progress_item()",
+      "source_file": "app.py",
+      "source_location": "L480"
+    },
+    {
+      "id": "app_api_create_progress_project",
+      "label": "api_create_progress_project()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_create_progress_project()",
+      "source_file": "app.py",
+      "source_location": "L360"
+    },
+    {
+      "id": "app_api_create_progress_week",
+      "label": "api_create_progress_week()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_create_progress_week()",
+      "source_file": "app.py",
+      "source_location": "L452"
+    },
+    {
+      "id": "app_api_create_task",
+      "label": "api_create_task()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_create_task()",
+      "source_file": "app.py",
+      "source_location": "L210"
+    },
+    {
+      "id": "app_api_delete_column",
+      "label": "api_delete_column()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_delete_column()",
+      "source_file": "app.py",
+      "source_location": "L194"
+    },
+    {
+      "id": "app_api_delete_custom_field",
+      "label": "api_delete_custom_field()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_delete_custom_field()",
+      "source_file": "app.py",
+      "source_location": "L284"
+    },
+    {
+      "id": "app_api_delete_field_row",
+      "label": "api_delete_field_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_delete_field_row()",
+      "source_file": "app.py",
+      "source_location": "L311"
+    },
+    {
+      "id": "app_api_delete_payment_row",
+      "label": "api_delete_payment_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_delete_payment_row()",
+      "source_file": "app.py",
+      "source_location": "L349"
+    },
+    {
+      "id": "app_api_delete_progress_item",
+      "label": "api_delete_progress_item()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_delete_progress_item()",
+      "source_file": "app.py",
+      "source_location": "L507"
+    },
+    {
+      "id": "app_api_delete_progress_project",
+      "label": "api_delete_progress_project()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_delete_progress_project()",
+      "source_file": "app.py",
+      "source_location": "L381"
+    },
+    {
+      "id": "app_api_delete_progress_week",
+      "label": "api_delete_progress_week()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_delete_progress_week()",
+      "source_file": "app.py",
+      "source_location": "L469"
+    },
+    {
+      "id": "app_api_delete_task",
+      "label": "api_delete_task()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_delete_task()",
+      "source_file": "app.py",
+      "source_location": "L246"
+    },
+    {
+      "id": "app_api_duplicate_task",
+      "label": "api_duplicate_task()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_duplicate_task()",
+      "source_file": "app.py",
+      "source_location": "L252"
     },
     {
       "id": "app_api_export_progress_excel",
@@ -2669,7 +2261,7 @@
       "file_type": "code",
       "norm_label": "api_export_progress_excel()",
       "source_file": "app.py",
-      "source_location": "L415"
+      "source_location": "L410"
     },
     {
       "id": "app_api_export_progress_pdf",
@@ -2681,7 +2273,67 @@
       "file_type": "code",
       "norm_label": "api_export_progress_pdf()",
       "source_file": "app.py",
-      "source_location": "L432"
+      "source_location": "L427"
+    },
+    {
+      "id": "app_api_import_progress",
+      "label": "api_import_progress()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_import_progress()",
+      "source_file": "app.py",
+      "source_location": "L387"
+    },
+    {
+      "id": "app_api_list_columns",
+      "label": "api_list_columns()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_list_columns()",
+      "source_file": "app.py",
+      "source_location": "L159"
+    },
+    {
+      "id": "app_api_list_payment_rows",
+      "label": "api_list_payment_rows()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_list_payment_rows()",
+      "source_file": "app.py",
+      "source_location": "L317"
+    },
+    {
+      "id": "app_api_list_progress_items",
+      "label": "api_list_progress_items()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_list_progress_items()",
+      "source_file": "app.py",
+      "source_location": "L475"
+    },
+    {
+      "id": "app_api_list_progress_projects",
+      "label": "api_list_progress_projects()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_list_progress_projects()",
+      "source_file": "app.py",
+      "source_location": "L355"
     },
     {
       "id": "app_api_list_progress_weeks",
@@ -2693,7 +2345,151 @@
       "file_type": "code",
       "norm_label": "api_list_progress_weeks()",
       "source_file": "app.py",
-      "source_location": "L452"
+      "source_location": "L447"
+    },
+    {
+      "id": "app_api_list_tasks",
+      "label": "api_list_tasks()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_list_tasks()",
+      "source_file": "app.py",
+      "source_location": "L205"
+    },
+    {
+      "id": "app_api_move_task",
+      "label": "api_move_task()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_move_task()",
+      "source_file": "app.py",
+      "source_location": "L233"
+    },
+    {
+      "id": "app_api_rename_column",
+      "label": "api_rename_column()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_rename_column()",
+      "source_file": "app.py",
+      "source_location": "L182"
+    },
+    {
+      "id": "app_api_rename_custom_field",
+      "label": "api_rename_custom_field()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_rename_custom_field()",
+      "source_file": "app.py",
+      "source_location": "L272"
+    },
+    {
+      "id": "app_api_rename_progress_project",
+      "label": "api_rename_progress_project()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_rename_progress_project()",
+      "source_file": "app.py",
+      "source_location": "L369"
+    },
+    {
+      "id": "app_api_rename_progress_week",
+      "label": "api_rename_progress_week()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_rename_progress_week()",
+      "source_file": "app.py",
+      "source_location": "L459"
+    },
+    {
+      "id": "app_api_reorder_columns",
+      "label": "api_reorder_columns()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_reorder_columns()",
+      "source_file": "app.py",
+      "source_location": "L173"
+    },
+    {
+      "id": "app_api_set_progress_entry",
+      "label": "api_set_progress_entry()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_set_progress_entry()",
+      "source_file": "app.py",
+      "source_location": "L513"
+    },
+    {
+      "id": "app_api_update_field_row",
+      "label": "api_update_field_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_update_field_row()",
+      "source_file": "app.py",
+      "source_location": "L302"
+    },
+    {
+      "id": "app_api_update_payment_row",
+      "label": "api_update_payment_row()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_update_payment_row()",
+      "source_file": "app.py",
+      "source_location": "L330"
+    },
+    {
+      "id": "app_api_update_progress_item",
+      "label": "api_update_progress_item()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_update_progress_item()",
+      "source_file": "app.py",
+      "source_location": "L490"
+    },
+    {
+      "id": "app_api_update_task",
+      "label": "api_update_task()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "api_update_task()",
+      "source_file": "app.py",
+      "source_location": "L219"
     },
     {
       "id": "app_app_dir",
@@ -2729,7 +2525,7 @@
       "file_type": "code",
       "norm_label": "generate()",
       "source_file": "app.py",
-      "source_location": "L533"
+      "source_location": "L528"
     },
     {
       "id": "app_generate_wad",
@@ -2741,7 +2537,19 @@
       "file_type": "code",
       "norm_label": "generate_wad()",
       "source_file": "app.py",
-      "source_location": "L560"
+      "source_location": "L555"
+    },
+    {
+      "id": "app_index",
+      "label": "index()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "index()",
+      "source_file": "app.py",
+      "source_location": "L119"
     },
     {
       "id": "app_load_dotenv",
@@ -2768,6 +2576,18 @@
       "source_location": "L92"
     },
     {
+      "id": "app_progress_tracker",
+      "label": "progress_tracker()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "progress_tracker()",
+      "source_file": "app.py",
+      "source_location": "L134"
+    },
+    {
       "id": "app_progress_tracker_detail",
       "label": "progress_tracker_detail()",
       "_callable": true,
@@ -2777,7 +2597,19 @@
       "file_type": "code",
       "norm_label": "progress_tracker_detail()",
       "source_file": "app.py",
-      "source_location": "L144"
+      "source_location": "L139"
+    },
+    {
+      "id": "app_project_management",
+      "label": "project_management()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "project_management()",
+      "source_file": "app.py",
+      "source_location": "L129"
     },
     {
       "id": "app_require_login",
@@ -2816,40 +2648,28 @@
       "source_location": "L113"
     },
     {
-      "id": "core_docx_filler_fill_template",
-      "label": "fill_template()",
+      "id": "app_working_advance",
+      "label": "working_advance()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
       "community_name": "app.py",
       "file_type": "code",
-      "norm_label": "fill_template()",
-      "source_file": "core/docx_filler.py",
-      "source_location": "L63"
+      "norm_label": "working_advance()",
+      "source_file": "app.py",
+      "source_location": "L124"
     },
     {
-      "id": "core_docx_filler_prepare_replacements",
-      "label": "prepare_replacements()",
+      "id": "core_cache_get_or_set",
+      "label": "get_or_set()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
       "community_name": "app.py",
       "file_type": "code",
-      "norm_label": "prepare_replacements()",
-      "source_file": "core/docx_filler.py",
-      "source_location": "L39"
-    },
-    {
-      "id": "core_docx_utils_format_date",
-      "label": "format_date()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "app.py",
-      "file_type": "code",
-      "norm_label": "format_date()",
-      "source_file": "core/docx_utils.py",
-      "source_location": "L17"
+      "norm_label": "get_or_set()",
+      "source_file": "core/cache.py",
+      "source_location": "L18"
     },
     {
       "id": "core_pm_db_get_progress_project",
@@ -2862,6 +2682,18 @@
       "norm_label": "get_progress_project()",
       "source_file": "core/pm_db.py",
       "source_location": "L670"
+    },
+    {
+      "id": "core_pm_db_list_progress_items",
+      "label": "list_progress_items()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "list_progress_items()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L809"
     },
     {
       "id": "core_pm_db_list_progress_weeks",
@@ -3056,352 +2888,16 @@
       "source_location": "L69"
     },
     {
-      "id": "static_html_to_image_a",
-      "label": "a()",
+      "id": "core_pm_db_conn_execute",
+      "label": ".execute()",
       "_callable": true,
       "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
+      "community": 7,
+      "community_name": "_Cursor",
       "file_type": "code",
-      "norm_label": "a()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_b",
-      "label": "B()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "b()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_c",
-      "label": "c()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "c()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_d",
-      "label": "d()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "d()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_e",
-      "label": "e()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "e()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_e_a",
-      "label": "a()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "a()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_e_c",
-      "label": "c()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "c()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_e_u",
-      "label": "u()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "u()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_et",
-      "label": "et()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "et()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_f",
-      "label": "f()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "f()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_g",
-      "label": "g()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "g()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_h",
-      "label": "h()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "h()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_i",
-      "label": "I()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "i()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_j",
-      "label": "j()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "j()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_k",
-      "label": "k()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "k()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_m",
-      "label": "m()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "m()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_n",
-      "label": "n()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "n()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_n_c",
-      "label": "c()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "c()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_o",
-      "label": "o()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "o()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_q",
-      "label": "q()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "q()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_r",
-      "label": "R()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "r()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_s",
-      "label": "s()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "s()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_t",
-      "label": "T()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "t()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_tt",
-      "label": "tt()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "tt()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_u",
-      "label": "U()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "u()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_v",
-      "label": "v()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "v()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_x",
-      "label": "x()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "x()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_y",
-      "label": "Y()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "y()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "static_html_to_image_z",
-      "label": "z()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "z()",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
+      "norm_label": ".execute()",
+      "source_file": "core/pm_db.py",
+      "source_location": "L92"
     },
     {
       "id": "core_pm_db_cursor_execute",
@@ -3620,24 +3116,12 @@
       "source_location": "L62"
     },
     {
-      "id": "app_api_import_progress",
-      "label": "api_import_progress()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "api_import_progress",
-      "file_type": "code",
-      "norm_label": "api_import_progress()",
-      "source_file": "app.py",
-      "source_location": "L392"
-    },
-    {
       "id": "core_boq_import_parse",
       "label": "parse()",
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "api_import_progress",
+      "community_name": "parse",
       "file_type": "code",
       "norm_label": "parse()",
       "source_file": "core/boq_import.py",
@@ -3649,7 +3133,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "api_import_progress",
+      "community_name": "parse",
       "file_type": "code",
       "norm_label": "field()",
       "source_file": "core/boq_import.py",
@@ -3661,23 +3145,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "api_import_progress",
+      "community_name": "parse",
       "file_type": "code",
       "norm_label": "_to_float()",
       "source_file": "core/boq_import.py",
       "source_location": "L35"
-    },
-    {
-      "id": "core_pm_db_replace_progress_data",
-      "label": "replace_progress_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "api_import_progress",
-      "file_type": "code",
-      "norm_label": "replace_progress_data()",
-      "source_file": "core/pm_db.py",
-      "source_location": "L707"
     },
     {
       "id": "static_progress_tracker",
@@ -3702,6 +3174,17 @@
       "source_location": "L1"
     },
     {
+      "id": "pgconnection",
+      "label": "PgConnection",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "code",
+      "norm_label": "pgconnection",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "core_pm_db_rationale_1",
       "label": "Postgres-backed storage (via a Neon database) for the Project Management board\u2026",
       "_origin": "ast",
@@ -3713,6 +3196,28 @@
       "source_location": "L1"
     },
     {
+      "id": "core_pm_db_rationale_100",
+      "label": "Opens the connection pool and creates the tables (if needed). Must be called\u2026",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "rationale",
+      "norm_label": "opens the connection pool and creates the tables (if needed). must be called...",
+      "source_file": "core/pm_db.py",
+      "source_location": "L100"
+    },
+    {
+      "id": "core_pm_db_rationale_212",
+      "label": "Takes a connection from the pool, swapping out any that died while idle. Fresh\u2026",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "rationale",
+      "norm_label": "takes a connection from the pool, swapping out any that died while idle. fresh...",
+      "source_file": "core/pm_db.py",
+      "source_location": "L212"
+    },
+    {
       "id": "core_pm_db_rationale_259",
       "label": "Sets each task's \"custom_fields\" (each field with its \"rows\") in two queries\u2026",
       "_origin": "ast",
@@ -3722,6 +3227,17 @@
       "norm_label": "sets each task's \"custom_fields\" (each field with its \"rows\") in two queries...",
       "source_file": "core/pm_db.py",
       "source_location": "L259"
+    },
+    {
+      "id": "core_pm_db_rationale_29",
+      "label": "psycopg2 connection that remembers when it was last used, so _checkout() only\u2026",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "rationale",
+      "norm_label": "psycopg2 connection that remembers when it was last used, so _checkout() only...",
+      "source_file": "core/pm_db.py",
+      "source_location": "L29"
     },
     {
       "id": "core_pm_db_rationale_371",
@@ -3744,6 +3260,50 @@
       "norm_label": "moves a task to `status` column at `index` (0-based), used for drag-and-drop...",
       "source_file": "core/pm_db.py",
       "source_location": "L397"
+    },
+    {
+      "id": "core_pm_db_rationale_632",
+      "label": "Alphabetical by name \u2014 each project is a fully separate tracker (its own\u2026",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "rationale",
+      "norm_label": "alphabetical by name \u2014 each project is a fully separate tracker (its own...",
+      "source_file": "core/pm_db.py",
+      "source_location": "L632"
+    },
+    {
+      "id": "core_pm_db_rationale_708",
+      "label": "Wipes a project's tracker (categories, subcategories, items, weeks, and\u2026",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "rationale",
+      "norm_label": "wipes a project's tracker (categories, subcategories, items, weeks, and...",
+      "source_file": "core/pm_db.py",
+      "source_location": "L708"
+    },
+    {
+      "id": "core_pm_db_rationale_803",
+      "label": "Splits a code like 'A1.10' into ('a', 1, '.', 10, '') so numeric runs sort by\u2026",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "rationale",
+      "norm_label": "splits a code like 'a1.10' into ('a', 1, '.', 10, '') so numeric runs sort by...",
+      "source_file": "core/pm_db.py",
+      "source_location": "L803"
+    },
+    {
+      "id": "core_pm_db_rationale_834",
+      "label": "level: 0 = category, 1 = subcategory (tied to the category above it), 2 = leaf\u2026",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "pm_db.py",
+      "file_type": "rationale",
+      "norm_label": "level: 0 = category, 1 = subcategory (tied to the category above it), 2 = leaf...",
+      "source_file": "core/pm_db.py",
+      "source_location": "L834"
     },
     {
       "id": "core_pm_db_rationale_86",
@@ -3908,18 +3468,7 @@
       "source_location": ""
     },
     {
-      "id": "core_cache",
-      "label": "cache.py",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "_invalidate_cache_on_write",
-      "file_type": "code",
-      "norm_label": "cache.py",
-      "source_file": "core/cache.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_rationale_155",
+      "id": "app_rationale_150",
       "label": "Any write under /api/ can change what the cached list endpoints below would\u2026",
       "_origin": "ast",
       "community": 13,
@@ -3927,18 +3476,7 @@
       "file_type": "rationale",
       "norm_label": "any write under /api/ can change what the cached list endpoints below would...",
       "source_file": "app.py",
-      "source_location": "L155"
-    },
-    {
-      "id": "core_cache_rationale_1",
-      "label": "Redis-backed cache for read-heavy board/tracker queries (columns, tasks,\u2026",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "_invalidate_cache_on_write",
-      "file_type": "rationale",
-      "norm_label": "redis-backed cache for read-heavy board/tracker queries (columns, tasks,...",
-      "source_file": "core/cache.py",
-      "source_location": "L1"
+      "source_location": "L150"
     },
     {
       "id": "core_cache_rationale_37",
@@ -3963,127 +3501,6 @@
       "source_location": "L1"
     },
     {
-      "id": "core_pm_db_rationale_100",
-      "label": "Opens the connection pool and creates the tables (if needed). Must be called\u2026",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "rationale",
-      "norm_label": "opens the connection pool and creates the tables (if needed). must be called...",
-      "source_file": "core/pm_db.py",
-      "source_location": "L100"
-    },
-    {
-      "id": "core_pm_db_rationale_632",
-      "label": "Alphabetical by name \u2014 each project is a fully separate tracker (its own\u2026",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "rationale",
-      "norm_label": "alphabetical by name \u2014 each project is a fully separate tracker (its own...",
-      "source_file": "core/pm_db.py",
-      "source_location": "L632"
-    },
-    {
-      "id": "core_pm_db_rationale_834",
-      "label": "level: 0 = category, 1 = subcategory (tied to the category above it), 2 = leaf\u2026",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "_connect",
-      "file_type": "rationale",
-      "norm_label": "level: 0 = category, 1 = subcategory (tied to the category above it), 2 = leaf...",
-      "source_file": "core/pm_db.py",
-      "source_location": "L834"
-    },
-    {
-      "id": "route",
-      "label": "route",
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "code",
-      "norm_label": "route",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "core_cache_rationale_19",
-      "label": "Returns the cached value for `key`; on a miss (including TTL expiry) calls\u2026",
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "route",
-      "file_type": "rationale",
-      "norm_label": "returns the cached value for `key`; on a miss (including ttl expiry) calls...",
-      "source_file": "core/cache.py",
-      "source_location": "L19"
-    },
-    {
-      "id": "static_job_order",
-      "label": "job_order.js",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "job_order.js",
-      "file_type": "code",
-      "norm_label": "job_order.js",
-      "source_file": "static/job_order.js",
-      "source_location": "L1"
-    },
-    {
-      "id": "pgconnection",
-      "label": "PgConnection",
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "_PooledConnection",
-      "file_type": "code",
-      "norm_label": "pgconnection",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "core_pm_db_rationale_212",
-      "label": "Takes a connection from the pool, swapping out any that died while idle. Fresh\u2026",
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "_PooledConnection",
-      "file_type": "rationale",
-      "norm_label": "takes a connection from the pool, swapping out any that died while idle. fresh...",
-      "source_file": "core/pm_db.py",
-      "source_location": "L212"
-    },
-    {
-      "id": "core_pm_db_rationale_29",
-      "label": "psycopg2 connection that remembers when it was last used, so _checkout() only\u2026",
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "_PooledConnection",
-      "file_type": "rationale",
-      "norm_label": "psycopg2 connection that remembers when it was last used, so _checkout() only...",
-      "source_file": "core/pm_db.py",
-      "source_location": "L29"
-    },
-    {
-      "id": "core_pm_db_rationale_803",
-      "label": "Splits a code like 'A1.10' into ('a', 1, '.', 10, '') so numeric runs sort by\u2026",
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "list_progress_items",
-      "file_type": "rationale",
-      "norm_label": "splits a code like 'a1.10' into ('a', 1, '.', 10, '') so numeric runs sort by...",
-      "source_file": "core/pm_db.py",
-      "source_location": "L803"
-    },
-    {
-      "id": "core_pm_db_rationale_810",
-      "label": "Alphabetical by Item code (e.g. A, A1, A2, B, BS1, BS2 \u2014 a category's code is\u2026",
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "list_progress_items",
-      "file_type": "rationale",
-      "norm_label": "alphabetical by item code (e.g. a, a1, a2, b, bs1, bs2 \u2014 a category's code is...",
-      "source_file": "core/pm_db.py",
-      "source_location": "L810"
-    },
-    {
       "id": "static_project",
       "label": "project.js",
       "_origin": "ast",
@@ -4092,6 +3509,17 @@
       "file_type": "code",
       "norm_label": "project.js",
       "source_file": "static/project.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "core_docx_filler",
+      "label": "docx_filler.py",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "docx_filler_wad.py",
+      "file_type": "code",
+      "norm_label": "docx_filler.py",
+      "source_file": "core/docx_filler.py",
       "source_location": "L1"
     },
     {
@@ -4150,6 +3578,39 @@
       "source_location": ""
     },
     {
+      "id": "core_docx_filler_rationale_1",
+      "label": "Fills bracketed placeholders (e.g. ``[Contractor Name]``) in the Contract for\u2026",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "docx_filler_wad.py",
+      "file_type": "rationale",
+      "norm_label": "fills bracketed placeholders (e.g. ``[contractor name]``) in the contract for...",
+      "source_file": "core/docx_filler.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "core_docx_filler_rationale_40",
+      "label": "Normalizes raw request data into the final placeholder -> text map used for\u2026",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "docx_filler_wad.py",
+      "file_type": "rationale",
+      "norm_label": "normalizes raw request data into the final placeholder -> text map used for...",
+      "source_file": "core/docx_filler.py",
+      "source_location": "L40"
+    },
+    {
+      "id": "core_docx_filler_rationale_64",
+      "label": "Fills the Contract for Works template with the given data and writes the result\u2026",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "docx_filler_wad.py",
+      "file_type": "rationale",
+      "norm_label": "fills the contract for works template with the given data and writes the result...",
+      "source_file": "core/docx_filler.py",
+      "source_location": "L64"
+    },
+    {
       "id": "core_docx_filler_wad_rationale_1",
       "label": "Fills bracketed placeholders in the WAD (Working Advance) template. The\u2026",
       "_origin": "ast",
@@ -4205,6 +3666,17 @@
       "source_location": "L148"
     },
     {
+      "id": "core_docx_utils_rationale_18",
+      "label": "Accepts an ISO date (YYYY-MM-DD) or a plain string and returns a human readable\u2026",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "docx_filler_wad.py",
+      "file_type": "rationale",
+      "norm_label": "accepts an iso date (yyyy-mm-dd) or a plain string and returns a human readable...",
+      "source_file": "core/docx_utils.py",
+      "source_location": "L18"
+    },
+    {
       "id": "core_docx_utils_rationale_33",
       "label": "Same as format_date but renders as DD-MM-YYYY.",
       "_origin": "ast",
@@ -4249,14 +3721,14 @@
       "source_location": ""
     },
     {
-      "id": "core_docx_filler",
-      "label": "docx_filler.py",
+      "id": "core_cache",
+      "label": "cache.py",
       "_origin": "ast",
       "community": 4,
       "community_name": "app.py",
       "file_type": "code",
-      "norm_label": "docx_filler.py",
-      "source_file": "core/docx_filler.py",
+      "norm_label": "cache.py",
+      "source_file": "core/cache.py",
       "source_location": "L1"
     },
     {
@@ -4269,6 +3741,17 @@
       "norm_label": "__init__.py",
       "source_file": "core/__init__.py",
       "source_location": "L1"
+    },
+    {
+      "id": "route",
+      "label": "route",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "app.py",
+      "file_type": "code",
+      "norm_label": "route",
+      "source_file": "",
+      "source_location": ""
     },
     {
       "id": "app_rationale_20",
@@ -4304,48 +3787,37 @@
       "source_location": "L36"
     },
     {
-      "id": "core_docx_filler_rationale_1",
-      "label": "Fills bracketed placeholders (e.g. ``[Contractor Name]``) in the Contract for\u2026",
+      "id": "core_cache_rationale_1",
+      "label": "Redis-backed cache for read-heavy board/tracker queries (columns, tasks,\u2026",
       "_origin": "ast",
       "community": 4,
       "community_name": "app.py",
       "file_type": "rationale",
-      "norm_label": "fills bracketed placeholders (e.g. ``[contractor name]``) in the contract for...",
-      "source_file": "core/docx_filler.py",
+      "norm_label": "redis-backed cache for read-heavy board/tracker queries (columns, tasks,...",
+      "source_file": "core/cache.py",
       "source_location": "L1"
     },
     {
-      "id": "core_docx_filler_rationale_40",
-      "label": "Normalizes raw request data into the final placeholder -> text map used for\u2026",
+      "id": "core_cache_rationale_19",
+      "label": "Returns the cached value for `key`; on a miss (including TTL expiry) calls\u2026",
       "_origin": "ast",
       "community": 4,
       "community_name": "app.py",
       "file_type": "rationale",
-      "norm_label": "normalizes raw request data into the final placeholder -> text map used for...",
-      "source_file": "core/docx_filler.py",
-      "source_location": "L40"
+      "norm_label": "returns the cached value for `key`; on a miss (including ttl expiry) calls...",
+      "source_file": "core/cache.py",
+      "source_location": "L19"
     },
     {
-      "id": "core_docx_filler_rationale_64",
-      "label": "Fills the Contract for Works template with the given data and writes the result\u2026",
+      "id": "core_pm_db_rationale_810",
+      "label": "Alphabetical by Item code (e.g. A, A1, A2, B, BS1, BS2 \u2014 a category's code is\u2026",
       "_origin": "ast",
       "community": 4,
       "community_name": "app.py",
       "file_type": "rationale",
-      "norm_label": "fills the contract for works template with the given data and writes the result...",
-      "source_file": "core/docx_filler.py",
-      "source_location": "L64"
-    },
-    {
-      "id": "core_docx_utils_rationale_18",
-      "label": "Accepts an ISO date (YYYY-MM-DD) or a plain string and returns a human readable\u2026",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "app.py",
-      "file_type": "rationale",
-      "norm_label": "accepts an iso date (yyyy-mm-dd) or a plain string and returns a human readable...",
-      "source_file": "core/docx_utils.py",
-      "source_location": "L18"
+      "norm_label": "alphabetical by item code (e.g. a, a1, a2, b, bs1, bs2 \u2014 a category's code is...",
+      "source_file": "core/pm_db.py",
+      "source_location": "L810"
     },
     {
       "id": "bytesio",
@@ -4412,17 +3884,6 @@
       "norm_label": "approximates the web card's css `text-overflow: ellipsis` for a single-line...",
       "source_file": "core/progress_export.py",
       "source_location": "L232"
-    },
-    {
-      "id": "static_html_to_image",
-      "label": "html-to-image.js",
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "html-to-image.js",
-      "file_type": "code",
-      "norm_label": "html-to-image.js",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1"
     },
     {
       "id": "tuple",
@@ -4517,7 +3978,7 @@
       "label": "boq_import.py",
       "_origin": "ast",
       "community": 9,
-      "community_name": "api_import_progress",
+      "community_name": "parse",
       "file_type": "code",
       "norm_label": "boq_import.py",
       "source_file": "core/boq_import.py",
@@ -4528,7 +3989,7 @@
       "label": "Parses a tab-separated BOQ progress-tracker export (Item / Item Description /\u2026",
       "_origin": "ast",
       "community": 9,
-      "community_name": "api_import_progress",
+      "community_name": "parse",
       "file_type": "rationale",
       "norm_label": "parses a tab-separated boq progress-tracker export (item / item description /...",
       "source_file": "core/boq_import.py",
@@ -4539,37 +4000,14 @@
       "label": "Returns (week_labels, rows). Raises ValueError if the file doesn't look like a\u2026",
       "_origin": "ast",
       "community": 9,
-      "community_name": "api_import_progress",
+      "community_name": "parse",
       "file_type": "rationale",
       "norm_label": "returns (week_labels, rows). raises valueerror if the file doesn't look like a...",
       "source_file": "core/boq_import.py",
       "source_location": "L46"
-    },
-    {
-      "id": "core_pm_db_rationale_708",
-      "label": "Wipes a project's tracker (categories, subcategories, items, weeks, and\u2026",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "api_import_progress",
-      "file_type": "rationale",
-      "norm_label": "wipes a project's tracker (categories, subcategories, items, weeks, and...",
-      "source_file": "core/pm_db.py",
-      "source_location": "L708"
     }
   ],
   "links": [
-    {
-      "source": "static_html_to_image_e",
-      "target": "static_html_to_image_a",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 0.85,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
     {
       "source": "app_api_create_column",
       "target": "core_pm_db_create_column",
@@ -4579,7 +4017,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L174",
+      "source_location": "L169",
       "weight": 1.0
     },
     {
@@ -4591,7 +4029,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L270",
+      "source_location": "L265",
       "weight": 1.0
     },
     {
@@ -4603,7 +4041,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L300",
+      "source_location": "L295",
       "weight": 1.0
     },
     {
@@ -4615,7 +4053,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L328",
+      "source_location": "L323",
       "weight": 1.0
     },
     {
@@ -4627,7 +4065,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L491",
+      "source_location": "L486",
       "weight": 1.0
     },
     {
@@ -4639,7 +4077,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L370",
+      "source_location": "L365",
       "weight": 1.0
     },
     {
@@ -4651,7 +4089,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L460",
+      "source_location": "L455",
       "weight": 1.0
     },
     {
@@ -4663,7 +4101,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L220",
+      "source_location": "L215",
       "weight": 1.0
     },
     {
@@ -4675,7 +4113,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L201",
+      "source_location": "L196",
       "weight": 1.0
     },
     {
@@ -4687,7 +4125,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L290",
+      "source_location": "L285",
       "weight": 1.0
     },
     {
@@ -4699,7 +4137,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L317",
+      "source_location": "L312",
       "weight": 1.0
     },
     {
@@ -4711,7 +4149,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L355",
+      "source_location": "L350",
       "weight": 1.0
     },
     {
@@ -4723,7 +4161,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L513",
+      "source_location": "L508",
       "weight": 1.0
     },
     {
@@ -4735,7 +4173,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L387",
+      "source_location": "L382",
       "weight": 1.0
     },
     {
@@ -4747,7 +4185,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L475",
+      "source_location": "L470",
       "weight": 1.0
     },
     {
@@ -4759,7 +4197,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L252",
+      "source_location": "L247",
       "weight": 1.0
     },
     {
@@ -4771,7 +4209,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L258",
+      "source_location": "L253",
       "weight": 1.0
     },
     {
@@ -4783,7 +4221,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L416",
+      "source_location": "L411",
       "weight": 1.0
     },
     {
@@ -4795,7 +4233,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L419",
+      "source_location": "L414",
       "weight": 1.0
     },
     {
@@ -4807,7 +4245,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L420",
+      "source_location": "L415",
       "weight": 1.0
     },
     {
@@ -4819,7 +4257,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L421",
+      "source_location": "L416",
       "weight": 1.0
     },
     {
@@ -4831,7 +4269,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L422",
+      "source_location": "L417",
       "weight": 1.0
     },
     {
@@ -4843,7 +4281,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L433",
+      "source_location": "L428",
       "weight": 1.0
     },
     {
@@ -4855,7 +4293,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L436",
+      "source_location": "L431",
       "weight": 1.0
     },
     {
@@ -4867,7 +4305,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L437",
+      "source_location": "L432",
       "weight": 1.0
     },
     {
@@ -4879,7 +4317,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L441",
+      "source_location": "L436",
       "weight": 1.0
     },
     {
@@ -4891,7 +4329,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L442",
+      "source_location": "L437",
       "weight": 1.0
     },
     {
@@ -4903,7 +4341,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L393",
+      "source_location": "L388",
       "weight": 1.0
     },
     {
@@ -4915,7 +4353,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L406",
+      "source_location": "L401",
       "weight": 1.0
     },
     {
@@ -4927,7 +4365,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L410",
+      "source_location": "L405",
       "weight": 1.0
     },
     {
@@ -4939,7 +4377,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L165",
+      "source_location": "L160",
       "weight": 1.0
     },
     {
@@ -4951,7 +4389,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L323",
+      "source_location": "L318",
       "weight": 1.0
     },
     {
@@ -4963,7 +4401,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L481",
+      "source_location": "L476",
       "weight": 1.0
     },
     {
@@ -4975,7 +4413,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L361",
+      "source_location": "L356",
       "weight": 1.0
     },
     {
@@ -4987,7 +4425,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L453",
+      "source_location": "L448",
       "weight": 1.0
     },
     {
@@ -4999,7 +4437,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L211",
+      "source_location": "L206",
       "weight": 1.0
     },
     {
@@ -5011,7 +4449,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L244",
+      "source_location": "L239",
       "weight": 1.0
     },
     {
@@ -5023,7 +4461,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L192",
+      "source_location": "L187",
       "weight": 1.0
     },
     {
@@ -5035,7 +4473,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L282",
+      "source_location": "L277",
       "weight": 1.0
     },
     {
@@ -5047,7 +4485,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L379",
+      "source_location": "L374",
       "weight": 1.0
     },
     {
@@ -5059,7 +4497,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L467",
+      "source_location": "L462",
       "weight": 1.0
     },
     {
@@ -5071,7 +4509,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L183",
+      "source_location": "L178",
       "weight": 1.0
     },
     {
@@ -5083,7 +4521,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L526",
+      "source_location": "L521",
       "weight": 1.0
     },
     {
@@ -5095,7 +4533,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L309",
+      "source_location": "L304",
       "weight": 1.0
     },
     {
@@ -5107,7 +4545,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L337",
+      "source_location": "L332",
       "weight": 1.0
     },
     {
@@ -5119,7 +4557,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L497",
+      "source_location": "L492",
       "weight": 1.0
     },
     {
@@ -5131,7 +4569,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L226",
+      "source_location": "L221",
       "weight": 1.0
     },
     {
@@ -5143,7 +4581,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L540",
+      "source_location": "L535",
       "weight": 1.0
     },
     {
@@ -5155,7 +4593,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L545",
+      "source_location": "L540",
       "weight": 1.0
     },
     {
@@ -5167,7 +4605,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L563",
+      "source_location": "L558",
       "weight": 1.0
     },
     {
@@ -5179,7 +4617,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L568",
+      "source_location": "L563",
       "weight": 1.0
     },
     {
@@ -5191,7 +4629,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L159",
+      "source_location": "L154",
       "weight": 1.0
     },
     {
@@ -5215,7 +4653,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app.py",
-      "source_location": "L145",
+      "source_location": "L140",
       "weight": 1.0
     },
     {
@@ -6512,1026 +5950,6 @@
       "context": "call",
       "source_file": "core/progress_export.py",
       "source_location": "L200",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_a",
-      "target": "static_html_to_image_h",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_a",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_a",
-      "target": "static_html_to_image_r",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_b",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_b",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_b",
-      "target": "static_html_to_image_o",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_b",
-      "target": "static_html_to_image_z",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_c",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_c",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_c",
-      "target": "static_html_to_image_o",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_d",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_d",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_e_a",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_e_c",
-      "target": "static_html_to_image_a",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_e_c",
-      "target": "static_html_to_image_o",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_e_u",
-      "target": "static_html_to_image_a",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_e_u",
-      "target": "static_html_to_image_o",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_et",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_et",
-      "target": "static_html_to_image_h",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_et",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_et",
-      "target": "static_html_to_image_s",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_et",
-      "target": "static_html_to_image_tt",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_f",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_f",
-      "target": "static_html_to_image_e_u",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_f",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_f",
-      "target": "static_html_to_image_r",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_f",
-      "target": "static_html_to_image_x",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_g",
-      "target": "static_html_to_image_c",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_h",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_i",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_i",
-      "target": "static_html_to_image_i",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_i",
-      "target": "static_html_to_image_k",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_i",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_i",
-      "target": "static_html_to_image_o",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_i",
-      "target": "static_html_to_image_t",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_j",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_j",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_j",
-      "target": "static_html_to_image_o",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_j",
-      "target": "static_html_to_image_u",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_k",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_k",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_m",
-      "target": "static_html_to_image_g",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_n",
-      "target": "static_html_to_image_m",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_o",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_o",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_o",
-      "target": "static_html_to_image_r",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_q",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_q",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_r",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_r",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_r",
-      "target": "static_html_to_image_x",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_s",
-      "target": "static_html_to_image_a",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_t",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_t",
-      "target": "static_html_to_image_h",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_t",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_tt",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_tt",
-      "target": "static_html_to_image_i",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_tt",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_tt",
-      "target": "static_html_to_image_s",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_tt",
-      "target": "static_html_to_image_v",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_tt",
-      "target": "static_html_to_image_z",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_u",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_u",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_u",
-      "target": "static_html_to_image_q",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_v",
-      "target": "static_html_to_image_d",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_v",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_v",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_x",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_x",
-      "target": "static_html_to_image_o",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_y",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_y",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_y",
-      "target": "static_html_to_image_q",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_z",
-      "target": "static_html_to_image_e",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_z",
-      "target": "static_html_to_image_j",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_z",
-      "target": "static_html_to_image_n",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_z",
-      "target": "static_html_to_image_y",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order_exec",
-      "target": "static_job_order_updatetoolbarstate",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/job_order.js",
-      "source_location": "L219",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order_exec",
-      "target": "static_job_order_render",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/job_order.js",
-      "source_location": "L220",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order_render",
-      "target": "static_job_order_recipients",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/job_order.js",
-      "source_location": "L140",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order_render",
-      "target": "static_job_order_renderrecipients",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/job_order.js",
-      "source_location": "L140",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order_render",
-      "target": "static_job_order_renderattachments",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/job_order.js",
-      "source_location": "L148",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order_renderattachments",
-      "target": "static_job_order_el",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/job_order.js",
-      "source_location": "L116",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order_renderattachments",
-      "target": "static_job_order_fileicon",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/job_order.js",
-      "source_location": "L123",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order_renderrecipients",
-      "target": "static_job_order_el",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/job_order.js",
-      "source_location": "L105",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order_withbutton",
-      "target": "static_job_order_showmessage",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "static/job_order.js",
-      "source_location": "L280",
       "weight": 1.0
     },
     {
@@ -9475,7 +7893,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L168",
+      "source_location": "L163",
       "weight": 1.0
     },
     {
@@ -9487,7 +7905,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L264",
+      "source_location": "L259",
       "weight": 1.0
     },
     {
@@ -9499,7 +7917,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L294",
+      "source_location": "L289",
       "weight": 1.0
     },
     {
@@ -9511,7 +7929,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L326",
+      "source_location": "L321",
       "weight": 1.0
     },
     {
@@ -9523,7 +7941,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L484",
+      "source_location": "L479",
       "weight": 1.0
     },
     {
@@ -9535,7 +7953,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L364",
+      "source_location": "L359",
       "weight": 1.0
     },
     {
@@ -9547,7 +7965,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L456",
+      "source_location": "L451",
       "weight": 1.0
     },
     {
@@ -9559,7 +7977,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L214",
+      "source_location": "L209",
       "weight": 1.0
     },
     {
@@ -9571,7 +7989,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L198",
+      "source_location": "L193",
       "weight": 1.0
     },
     {
@@ -9583,7 +8001,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L288",
+      "source_location": "L283",
       "weight": 1.0
     },
     {
@@ -9595,7 +8013,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L315",
+      "source_location": "L310",
       "weight": 1.0
     },
     {
@@ -9607,7 +8025,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L353",
+      "source_location": "L348",
       "weight": 1.0
     },
     {
@@ -9619,7 +8037,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L511",
+      "source_location": "L506",
       "weight": 1.0
     },
     {
@@ -9631,7 +8049,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L385",
+      "source_location": "L380",
       "weight": 1.0
     },
     {
@@ -9643,7 +8061,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L473",
+      "source_location": "L468",
       "weight": 1.0
     },
     {
@@ -9655,7 +8073,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L250",
+      "source_location": "L245",
       "weight": 1.0
     },
     {
@@ -9667,7 +8085,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L256",
+      "source_location": "L251",
       "weight": 1.0
     },
     {
@@ -9679,7 +8097,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L414",
+      "source_location": "L409",
       "weight": 1.0
     },
     {
@@ -9691,7 +8109,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L431",
+      "source_location": "L426",
       "weight": 1.0
     },
     {
@@ -9703,7 +8121,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L391",
+      "source_location": "L386",
       "weight": 1.0
     },
     {
@@ -9715,7 +8133,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L163",
+      "source_location": "L158",
       "weight": 1.0
     },
     {
@@ -9727,7 +8145,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L321",
+      "source_location": "L316",
       "weight": 1.0
     },
     {
@@ -9739,7 +8157,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L479",
+      "source_location": "L474",
       "weight": 1.0
     },
     {
@@ -9751,7 +8169,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L359",
+      "source_location": "L354",
       "weight": 1.0
     },
     {
@@ -9763,7 +8181,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L451",
+      "source_location": "L446",
       "weight": 1.0
     },
     {
@@ -9775,7 +8193,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L209",
+      "source_location": "L204",
       "weight": 1.0
     },
     {
@@ -9787,7 +8205,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L237",
+      "source_location": "L232",
       "weight": 1.0
     },
     {
@@ -9799,7 +8217,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L186",
+      "source_location": "L181",
       "weight": 1.0
     },
     {
@@ -9811,7 +8229,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L276",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -9823,7 +8241,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L373",
+      "source_location": "L368",
       "weight": 1.0
     },
     {
@@ -9835,7 +8253,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L463",
+      "source_location": "L458",
       "weight": 1.0
     },
     {
@@ -9847,7 +8265,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L177",
+      "source_location": "L172",
       "weight": 1.0
     },
     {
@@ -9859,7 +8277,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L517",
+      "source_location": "L512",
       "weight": 1.0
     },
     {
@@ -9871,7 +8289,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L306",
+      "source_location": "L301",
       "weight": 1.0
     },
     {
@@ -9883,7 +8301,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L334",
+      "source_location": "L329",
       "weight": 1.0
     },
     {
@@ -9895,7 +8313,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L494",
+      "source_location": "L489",
       "weight": 1.0
     },
     {
@@ -9907,7 +8325,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L223",
+      "source_location": "L218",
       "weight": 1.0
     },
     {
@@ -9919,7 +8337,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L532",
+      "source_location": "L527",
       "weight": 1.0
     },
     {
@@ -9931,7 +8349,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L559",
+      "source_location": "L554",
       "weight": 1.0
     },
     {
@@ -9955,19 +8373,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L153",
-      "weight": 1.0
-    },
-    {
-      "source": "app_job_order",
-      "target": "route",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "decorator",
-      "source_file": "app.py",
-      "source_location": "L138",
+      "source_location": "L148",
       "weight": 1.0
     },
     {
@@ -10003,7 +8409,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "app.py",
-      "source_location": "L143",
+      "source_location": "L138",
       "weight": 1.0
     },
     {
@@ -10447,7 +8853,7 @@
     },
     {
       "source": "app",
-      "target": "app_job_order",
+      "target": "app_progress_tracker_detail",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -10458,24 +8864,13 @@
     },
     {
       "source": "app",
-      "target": "app_progress_tracker_detail",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "app.py",
-      "source_location": "L144",
-      "weight": 1.0
-    },
-    {
-      "source": "app",
       "target": "app_invalidate_cache_on_write",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L154",
+      "source_location": "L149",
       "weight": 1.0
     },
     {
@@ -10486,7 +8881,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L164",
+      "source_location": "L159",
       "weight": 1.0
     },
     {
@@ -10497,7 +8892,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L169",
+      "source_location": "L164",
       "weight": 1.0
     },
     {
@@ -10508,7 +8903,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L178",
+      "source_location": "L173",
       "weight": 1.0
     },
     {
@@ -10519,7 +8914,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L187",
+      "source_location": "L182",
       "weight": 1.0
     },
     {
@@ -10541,7 +8936,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L199",
+      "source_location": "L194",
       "weight": 1.0
     },
     {
@@ -10552,7 +8947,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L210",
+      "source_location": "L205",
       "weight": 1.0
     },
     {
@@ -10563,7 +8958,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L215",
+      "source_location": "L210",
       "weight": 1.0
     },
     {
@@ -10574,7 +8969,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L224",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -10585,7 +8980,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L238",
+      "source_location": "L233",
       "weight": 1.0
     },
     {
@@ -10596,7 +8991,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L251",
+      "source_location": "L246",
       "weight": 1.0
     },
     {
@@ -10607,7 +9002,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L257",
+      "source_location": "L252",
       "weight": 1.0
     },
     {
@@ -10618,7 +9013,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L265",
+      "source_location": "L260",
       "weight": 1.0
     },
     {
@@ -10640,7 +9035,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L277",
+      "source_location": "L272",
       "weight": 1.0
     },
     {
@@ -10651,7 +9046,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L289",
+      "source_location": "L284",
       "weight": 1.0
     },
     {
@@ -10662,7 +9057,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L295",
+      "source_location": "L290",
       "weight": 1.0
     },
     {
@@ -10673,7 +9068,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L307",
+      "source_location": "L302",
       "weight": 1.0
     },
     {
@@ -10684,7 +9079,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L316",
+      "source_location": "L311",
       "weight": 1.0
     },
     {
@@ -10695,7 +9090,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L322",
+      "source_location": "L317",
       "weight": 1.0
     },
     {
@@ -10706,7 +9101,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L327",
+      "source_location": "L322",
       "weight": 1.0
     },
     {
@@ -10717,7 +9112,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L335",
+      "source_location": "L330",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_api_delete_payment_row",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app.py",
+      "source_location": "L349",
       "weight": 1.0
     },
     {
@@ -10733,24 +9139,13 @@
     },
     {
       "source": "app",
-      "target": "app_api_delete_payment_row",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "app.py",
-      "source_location": "L354",
-      "weight": 1.0
-    },
-    {
-      "source": "app",
       "target": "app_api_list_progress_projects",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L360",
+      "source_location": "L355",
       "weight": 1.0
     },
     {
@@ -10761,7 +9156,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L365",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -10772,7 +9167,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L374",
+      "source_location": "L369",
       "weight": 1.0
     },
     {
@@ -10783,7 +9178,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L386",
+      "source_location": "L381",
       "weight": 1.0
     },
     {
@@ -10794,7 +9189,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L392",
+      "source_location": "L387",
       "weight": 1.0
     },
     {
@@ -10805,7 +9200,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L415",
+      "source_location": "L410",
       "weight": 1.0
     },
     {
@@ -10816,7 +9211,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L432",
+      "source_location": "L427",
       "weight": 1.0
     },
     {
@@ -10827,7 +9222,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L452",
+      "source_location": "L447",
       "weight": 1.0
     },
     {
@@ -10838,7 +9233,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L457",
+      "source_location": "L452",
       "weight": 1.0
     },
     {
@@ -10849,7 +9244,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L464",
+      "source_location": "L459",
       "weight": 1.0
     },
     {
@@ -10860,7 +9255,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L474",
+      "source_location": "L469",
       "weight": 1.0
     },
     {
@@ -10871,7 +9266,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L480",
+      "source_location": "L475",
       "weight": 1.0
     },
     {
@@ -10882,7 +9277,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L485",
+      "source_location": "L480",
       "weight": 1.0
     },
     {
@@ -10893,7 +9288,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L495",
+      "source_location": "L490",
       "weight": 1.0
     },
     {
@@ -10904,7 +9299,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L512",
+      "source_location": "L507",
       "weight": 1.0
     },
     {
@@ -10915,7 +9310,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L518",
+      "source_location": "L513",
       "weight": 1.0
     },
     {
@@ -10926,7 +9321,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L533",
+      "source_location": "L528",
       "weight": 1.0
     },
     {
@@ -10937,7 +9332,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L560",
+      "source_location": "L555",
       "weight": 1.0
     },
     {
@@ -11961,479 +10356,6 @@
       "confidence_score": 1.0,
       "source_file": "README.md",
       "source_location": "L83",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_a",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_b",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_c",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_d",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_e",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_et",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_f",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_g",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_h",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_i",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_j",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_k",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_m",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_n",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_o",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_q",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_r",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_s",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_t",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_tt",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_u",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_v",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_x",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_y",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image",
-      "target": "static_html_to_image_z",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_e",
-      "target": "static_html_to_image_e_a",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_e",
-      "target": "static_html_to_image_e_c",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_e",
-      "target": "static_html_to_image_e_u",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_n",
-      "target": "static_html_to_image_n_c",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_renderrecipients",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L100",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_renderattachments",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L112",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_render",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L135",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_updatetoolbarstate",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L196",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_exec",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L210",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_showmessage",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L259",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_capture",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L264",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_filename",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L270",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_withbutton",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L275",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_fileicon",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L43",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_el",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L62",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_formatsize",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L72",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_addrow",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L80",
-      "weight": 1.0
-    },
-    {
-      "source": "static_job_order",
-      "target": "static_job_order_recipients",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "static/job_order.js",
-      "source_location": "L89",
       "weight": 1.0
     },
     {
@@ -13790,14 +11712,14 @@
       "weight": 1.0
     },
     {
-      "source": "app_rationale_155",
+      "source": "app_rationale_150",
       "target": "app_invalidate_cache_on_write",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app.py",
-      "source_location": "L155",
+      "source_location": "L150",
       "weight": 1.0
     },
     {
@@ -14208,102 +12130,6 @@
       "weight": 1.0
     },
     {
-      "source": "static_html_to_image_e_a",
-      "target": "static_html_to_image_c",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "argument",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_e_a",
-      "target": "static_html_to_image_e_u",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "argument",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_g",
-      "target": "static_html_to_image_e",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "argument",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_g",
-      "target": "static_html_to_image_n",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "argument",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_g",
-      "target": "static_html_to_image_o",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "argument",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_n_c",
-      "target": "static_html_to_image_e_u",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "argument",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_s",
-      "target": "static_html_to_image_n",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "argument",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_x",
-      "target": "static_html_to_image_e",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "argument",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
       "source": "static_progress_tracker_openpdfmodal",
       "target": "static_progress_tracker_syncpdfcontrols",
       "relation": "indirect_call",
@@ -14410,32 +12236,8 @@
       "source_file": "static/wad.js",
       "source_location": "L84",
       "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_s",
-      "target": "static_html_to_image_e_u",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "collection",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "static_html_to_image_s",
-      "target": "static_html_to_image_o",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "collection",
-      "source_file": "static/html-to-image.js",
-      "source_location": "L1",
-      "weight": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "776d38cef5e6655af2dcbd10843e6f83508fc96c"
+  "built_at_commit": "e6dbb79879d31b6d5489c9fc305141b0092bb95c"
 }

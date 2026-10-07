@@ -198,6 +198,7 @@ label {
 
 input[type="text"],
 input[type="date"],
+input[type="time"],
 input[type="tel"],
 input[type="email"],
 input[type="password"] {
@@ -1379,4 +1380,534 @@ a.btn-secondary {
 .login-submit {
   width: 100%;
   margin-top: 8px;
+}
+
+/* Job Order */
+
+.jo-layout {
+  display: grid;
+  grid-template-columns: minmax(380px, 1fr) 1026px;
+  gap: 24px;
+  align-items: start;
+}
+
+.jo-preview {
+  position: sticky;
+  top: 16px;
+  min-width: 0;
+}
+
+.jo-preview-actions {
+  margin: 0 0 12px;
+}
+
+.jo-preview .message {
+  margin: 0 0 12px;
+}
+
+.jo-preview-frame {
+  max-height: calc(100vh - 100px);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  box-shadow: var(--shadow-1);
+}
+
+@media (max-width: 1760px) {
+  .jo-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .jo-preview {
+    position: static;
+  }
+}
+
+.jo-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.jo-rows:empty {
+  margin-bottom: 0;
+}
+
+.jo-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jo-row input[type="text"] {
+  flex: 1;
+  min-width: 0;
+}
+
+.jo-row input.jo-att-size {
+  flex: 0 0 90px;
+}
+
+.jo-row select,
+.jo-tb-select {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  font-family: inherit;
+  font-size: 14px;
+  background: #fff;
+  color: var(--text);
+}
+
+.jo-add,
+.jo-file {
+  padding: 8px 14px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.jo-remove {
+  padding: 6px 12px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.field input[type="color"] {
+  width: 100%;
+  height: 38px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: #fff;
+  cursor: pointer;
+}
+
+.jo-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.jo-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--bg);
+}
+
+.jo-tb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 6px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.jo-tb:hover {
+  background: #e8e7e5;
+}
+
+.jo-tb.active {
+  background: rgba(0, 117, 222, 0.12);
+  color: var(--primary);
+}
+
+.jo-tb-select {
+  height: 32px;
+  padding: 0 6px;
+}
+
+.jo-tb-sep {
+  width: 1px;
+  height: 20px;
+  margin: 0 4px;
+  background: var(--border);
+}
+
+.jo-tb-color {
+  display: inline-flex;
+  align-items: center;
+}
+
+.jo-tb-swatch-label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.jo-tb-swatch {
+  display: block;
+  width: 16px;
+  height: 3px;
+  margin-top: 2px;
+  border-radius: 1px;
+}
+
+.jo-tb-color input[type="color"] {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.jo-tb-color input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.jo-tb-color input[type="color"]::-webkit-color-swatch {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+.jo-editor {
+  min-height: 320px;
+  max-height: 70vh;
+  overflow: auto;
+  padding: 12px 15px;
+  border: 1px solid var(--border);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  background: #fff;
+  outline: none;
+}
+
+.jo-editor:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus);
+}
+
+/* Shared by the editor and the email body so both format text the same way. */
+.ol-content {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15pt;
+  line-height: 1.4;
+  color: #000;
+  overflow-wrap: break-word;
+}
+
+.ol-content p {
+  margin: 0;
+}
+
+.ol-content ul,
+.ol-content ol {
+  margin: 0;
+  padding-left: 56px;
+}
+
+.ol-content li {
+  padding-left: 16px;
+  line-height: 1.5;
+}
+
+/* The captured email: measured 1:1 against an Outlook reading-pane screenshot. */
+
+.ol-email {
+  width: 1024px;
+  background: #fff;
+  color: #fff;
+  font-family: "Segoe UI", "Segoe UI Web (West European)", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+  text-align: left;
+}
+
+.ol-email [hidden] {
+  display: none !important;
+}
+
+.ol-header {
+  padding: 7px 31px 11px 28px;
+  background: #666;
+}
+
+.ol-subject {
+  font-size: 28px;
+  line-height: 36px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ol-top {
+  display: flex;
+  margin-top: 10px;
+}
+
+.ol-avatar {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin-top: 16px;
+  border-radius: 50%;
+  font-size: 28px;
+  font-weight: 300;
+}
+
+.ol-presence {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #626262;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.ol-meta {
+  flex: 1;
+  min-width: 0;
+  margin-left: 17px;
+  padding-top: 22px;
+}
+
+.ol-from {
+  margin-bottom: 2.5px;
+  font-size: 22px;
+  line-height: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ol-line {
+  display: flex;
+  font-size: 14pt;
+  line-height: 25px;
+}
+
+.ol-cc-line {
+  margin-top: 2px;
+}
+
+.ol-label {
+  flex: none;
+  width: 35px;
+}
+
+.ol-recips {
+  flex: 1;
+  min-width: 0;
+}
+
+.ol-recip {
+  white-space: nowrap;
+}
+
+/* Trailing gap, so a wrapped line still starts flush left. */
+.ol-recip:not(:last-child) {
+  margin-right: 3px;
+}
+
+.ol-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: #fff;
+  vertical-align: -1px;
+}
+
+.ol-dot-available {
+  background: #72b601 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2.6 5.2l1.7 1.7 3.2-3.5' fill='none' stroke='%23fff' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 10px no-repeat;
+}
+
+.ol-dot-busy {
+  background: #eb0218;
+}
+
+.ol-dot-away {
+  background: #ffaa44;
+}
+
+.ol-side {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: 12px;
+}
+
+.ol-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.ol-group {
+  display: flex;
+  height: 48px;
+  border: 1px solid #7e7e7e;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #d2d2d2;
+}
+
+.ol-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 47px;
+  box-shadow: inset 0 0 0 1px #ababab;
+}
+
+/* Widths include the 1px separators: 47 + 48 + 47 inside the 144px group. */
+.ol-btn + .ol-btn {
+  border-left: 1px solid #7e7e7e;
+}
+
+.ol-btn:nth-child(2) {
+  width: 48px;
+}
+
+.ol-more .ol-btn {
+  width: 46px;
+}
+
+.ol-date {
+  margin-top: 4.5px;
+  font-size: 14pt;
+  line-height: 25px;
+}
+
+.ol-replied {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6.5px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.ol-replied svg {
+  flex: none;
+}
+
+.ol-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 10px 0 0 -1px;
+}
+
+.ol-attachments:empty {
+  display: none;
+}
+
+.ol-att {
+  display: flex;
+  align-items: flex-start;
+  width: 443px;
+  height: 62px;
+  padding: 6px;
+  border: 1px solid #454545;
+  border-radius: 5px;
+  background: #d4d4d4;
+  color: #242424;
+}
+
+.ol-att-icon {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+}
+
+.ol-att-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.ol-att-text {
+  flex: 1;
+  min-width: 0;
+  margin-left: 14px;
+}
+
+.ol-att-name {
+  font-size: 18px;
+  line-height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ol-att-size {
+  font-size: 18px;
+  line-height: 24px;
+  color: #616161;
+}
+
+.ol-att-chevron {
+  flex: none;
+  align-self: center;
+  margin: 1px 6px 0 6px;
+}
+
+.ol-body-wrap {
+  display: flex;
+  min-height: 80px;
+  background: #fff;
+}
+
+.ol-body {
+  flex: 1;
+  min-width: 0;
+  padding: 1px 15px 24px;
+}
+
+.ol-scrollbar {
+  position: relative;
+  flex: none;
+  width: 21px;
+  background: #f5f5f5;
+}
+
+.ol-scroll-up,
+.ol-scroll-down {
+  position: absolute;
+  left: 4px;
+}
+
+.ol-scroll-up {
+  top: 7px;
+}
+
+.ol-scroll-down {
+  bottom: 8px;
+}
+
+.ol-scroll-thumb {
+  position: absolute;
+  top: 28px;
+  left: 5px;
+  width: 12px;
+  height: 31px;
+  border-radius: 6px;
+  background: #707070;
 }

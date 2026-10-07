@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Job Order{% endblock %}
+
+{% block content %}
+  <div class="page">
+    <header class="page-header">
+      <h1>Job Order</h1>
+      <p class="subtitle">Fill in the email details, then download or copy the screenshot.</p>
+    </header>
+
+    <div class="jo-layout">
+      <form id="jo-form" class="card" novalidate>
+        <section class="form-section">
+          <h2>Header</h2>
+          <div class="field">
+            <label for="jo-subject">Subject</label>
+            <input type="text" id="jo-subject" value="Accommodation in San Jose, Nueva Ecija for Althea Manguiat, Angeline Gwyneth Valdez, and ICRC Driver for 18-19 August" />
+          </div>
+          <div class="field">
+            <label for="jo-sender">Sender</label>
+            <input type="text" id="jo-sender" value="Nica Joy A_ Miguel on behalf of man" />
+          </div>
+          <div class="grid three-col">
+            <div class="field">
+              <label for="jo-initials">Avatar initials</label>
+              <input type="text" id="jo-initials" maxlength="3" value="MW" />
+            </div>
+            <div class="field">
+              <label for="jo-avatar-color">Avatar color</label>
+              <input type="color" id="jo-avatar-color" value="#4e6bed" />
+            </div>
+            <div class="field">
+              <label for="jo-date">Date</label>
+              <input type="date" id="jo-date" value="2026-08-13" />
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>To</h2>
+          <div id="jo-to" class="jo-rows" data-template="jo-recipient-template"></div>
+          <button type="button" class="btn-secondary jo-add" data-list="jo-to">Add recipient</button>
+        </section>
+
+        <section class="form-section">
+          <h2>Cc</h2>
+          <div id="jo-cc" class="jo-rows" data-template="jo-recipient-template"></div>
+          <button type="button" class="btn-secondary jo-add" data-list="jo-cc">Add recipient</button>
+        </section>
+
+        <section class="form-section">
+          <h2>Reply notice</h2>
+          <label class="jo-check"><input type="checkbox" id="jo-replied" checked /> Show "You replied to this message on…"</label>
+          <div class="grid two-col">
+            <div class="field">
+              <label for="jo-replied-date">Replied date</label>
+              <input type="date" id="jo-replied-date" value="2026-08-14" />
+            </div>
+            <div class="field">
+              <label for="jo-replied-time">Replied time</label>
+              <input type="time" id="jo-replied-time" value="11:19" />
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Attachments</h2>
+          <p class="section-hint">Pick a file to fill in its name and size. Images also become the thumbnail.</p>
+          <div id="jo-attachments" class="jo-rows" data-template="jo-attachment-template"></div>
+          <button type="button" class="btn-secondary jo-add" data-list="jo-attachments">Add attachment</button>
+        </section>
+
+        <section class="form-section">
+          <h2>Message</h2>
+          <div class="jo-toolbar" id="jo-toolbar">
+            <select id="jo-font-size" class="jo-tb-select" title="Font size" aria-label="Font size">
+              <option value="">Size</option>
+              <option>8pt</option><option>9pt</option><option>10pt</option><option>11pt</option>
+              <option>12pt</option><option>14pt</option><option>15pt</option><option>16pt</option>
+              <option>18pt</option><option>20pt</option><option>24pt</option><option>28pt</option>
+              <option>36pt</option>
+            </select>
+            <span class="jo-tb-sep"></span>
+            <button type="button" class="jo-tb" data-cmd="bold" title="Bold (Ctrl+B)"><b>B</b></button>
+            <button type="button" class="jo-tb" data-cmd="italic" title="Italic (Ctrl+I)"><i>I</i></button>
+            <button type="button" class="jo-tb" data-cmd="underline" title="Underline (Ctrl+U)"><u>U</u></button>
+            <button type="button" class="jo-tb" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+            <span class="jo-tb-sep"></span>
+            <span class="jo-tb-color">
+              <button type="button" class="jo-tb" data-color-cmd="foreColor" data-input="jo-fore-color" title="Text color">
+                <span class="jo-tb-swatch-label">A<span class="jo-tb-swatch" id="jo-fore-swatch"></span></span>
+              </button>
+              <input type="color" id="jo-fore-color" value="#ff00ff" title="Choose text color" aria-label="Text color" />
+            </span>
+            <span class="jo-tb-color">
+              <button type="button" class="jo-tb" data-color-cmd="hiliteColor" data-input="jo-back-color" title="Highlight color">
+                <span class="jo-tb-swatch-label">ab<span class="jo-tb-swatch" id="jo-back-swatch"></span></span>
+              </button>
+              <input type="color" id="jo-back-color" value="#ffff00" title="Choose highlight color" aria-label="Highlight color" />
+            </span>
+            <span class="jo-tb-sep"></span>
+            <button type="button" class="jo-tb" data-cmd="insertUnorderedList" title="Bulleted list">
+              <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><circle cx="3.5" cy="5" r="1.5"/><circle cx="3.5" cy="10" r="1.5"/><circle cx="3.5" cy="15" r="1.5"/><rect x="7" y="4.25" width="11" height="1.5" rx=".75"/><rect x="7" y="9.25" width="11" height="1.5" rx=".75"/><rect x="7" y="14.25" width="11" height="1.5" rx=".75"/></svg>
+            </button>
+            <button type="button" class="jo-tb" data-cmd="insertOrderedList" title="Numbered list">
+              <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><text x="1" y="7" font-size="6" font-family="Arial">1</text><text x="1" y="12.5" font-size="6" font-family="Arial">2</text><text x="1" y="18" font-size="6" font-family="Arial">3</text><rect x="7" y="4.25" width="11" height="1.5" rx=".75"/><rect x="7" y="9.25" width="11" height="1.5" rx=".75"/><rect x="7" y="14.25" width="11" height="1.5" rx=".75"/></svg>
+            </button>
+            <button type="button" class="jo-tb" data-cmd="outdent" title="Decrease indent">
+              <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h16M9 8.5h9M9 12.5h9M2 16.5h16M5.5 8 2.5 10.5l3 2.5"/></svg>
+            </button>
+            <button type="button" class="jo-tb" data-cmd="indent" title="Increase indent">
+              <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h16M9 8.5h9M9 12.5h9M2 16.5h16M2.5 8l3 2.5-3 2.5"/></svg>
+            </button>
+            <span class="jo-tb-sep"></span>
+            <button type="button" class="jo-tb" data-cmd="justifyLeft" title="Align left">
+              <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h16M2 8h10M2 12h16M2 16h10"/></svg>
+            </button>
+            <button type="button" class="jo-tb" data-cmd="justifyCenter" title="Center">
+              <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h16M5 8h10M2 12h16M5 16h10"/></svg>
+            </button>
+            <button type="button" class="jo-tb" data-cmd="justifyRight" title="Align right">
+              <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h16M8 8h10M2 12h16M8 16h10"/></svg>
+            </button>
+            <span class="jo-tb-sep"></span>
+            <button type="button" class="jo-tb" data-cmd="removeFormat" title="Clear formatting">
+              <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 4h11M9.5 4 7 16M3 3l14 14"/></svg>
+            </button>
+          </div>
+          <div id="jo-editor" class="jo-editor ol-content" contenteditable="true" spellcheck="true" aria-label="Message body"><div>Dear colleagues,</div><div><br></div><div>Good day!</div><div><br></div><div>Please find below the accommodation details in <b>San Jose, Nueva Ecija for Althea Manguiat, Angeline Gwyneth Valdez, and ICRC Driver for 18-19 August.</b></div><div><br></div><div><b>Farmhouse Hotel and Cafe</b></div><div>Maharlika Hwhy., Brgy. Caanawan 3121 San Jose,</div><div><br></div><ul><li><span style="color: rgb(255, 0, 255);">Inclusive of breakfast</span></li><li>Rate: <b>PHP 1,900 per night</b></li><li>Duration: <b>1 night</b></li><li>Rooms: <b>3</b></li><li><b><span style="color: rgb(0, 0, 255);">Total amount: PHP 5,700 (payable upon check-in)</span></b></li></ul></div>
+        </section>
+      </form>
+
+      <div class="jo-preview">
+        <div class="actions jo-preview-actions">
+          <button type="button" class="btn-secondary" id="jo-copy-btn">Copy image</button>
+          <button type="button" class="btn-primary" id="jo-download-btn">Download PNG</button>
+        </div>
+        <div id="jo-message" class="message" role="alert"></div>
+
+        <div class="jo-preview-frame">
+          {# Everything inside #jo-email is what gets captured as the image. #}
+          <div id="jo-email" class="ol-email">
+            <div class="ol-header">
+              <div class="ol-subject" id="ol-subject"></div>
+              <div class="ol-top">
+                <div class="ol-avatar" id="ol-avatar"><span id="ol-initials"></span><span class="ol-presence"></span></div>
+                <div class="ol-meta">
+                  <div class="ol-from" id="ol-from"></div>
+                  <div class="ol-line"><span class="ol-label">To</span><span class="ol-recips" id="ol-to"></span></div>
+                  <div class="ol-line ol-cc-line" id="ol-cc-line"><span class="ol-label">Cc</span><span class="ol-recips" id="ol-cc"></span></div>
+                </div>
+                <div class="ol-side">
+                  <div class="ol-buttons">
+                    <div class="ol-group">
+                      <span class="ol-btn" title="Reply">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#86044e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 1 1 7.5 7.5 14M1 7.5h14a7 7 0 0 1 0 14h-3.5"/></svg>
+                      </span>
+                      <span class="ol-btn" title="Reply all">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#86044e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1 .9 7.5 7 14m5-13L5.9 7.5 12 14M5.9 7.5H15a7 7 0 0 1 0 14h-3.5"/></svg>
+                      </span>
+                      <span class="ol-btn" title="Forward">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#1a5d91" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12h21.5M14.5 4l8 8-8 8"/></svg>
+                      </span>
+                    </div>
+                    <div class="ol-group ol-more">
+                      <span class="ol-btn" title="More actions">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="#424242"><circle cx="2.75" cy="12" r="2.25"/><circle cx="12" cy="12" r="2.25"/><circle cx="21.25" cy="12" r="2.25"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="ol-date" id="ol-date"></div>
+                </div>
+              </div>
+              <div class="ol-replied" id="ol-replied">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#4a94c8"><circle cx="12" cy="12" r="11.25" stroke-width="1.5"/><path d="M12 10.5V17" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7.25" r="1.25" fill="#4a94c8" stroke="none"/></svg>
+                <span id="ol-replied-text"></span>
+              </div>
+              <div class="ol-attachments" id="ol-attachments"></div>
+            </div>
+            <div class="ol-body-wrap">
+              <div class="ol-body ol-content" id="ol-body"></div>
+              <div class="ol-scrollbar" aria-hidden="true">
+                <svg class="ol-scroll-up" viewBox="0 0 14 10" width="14" height="10"><path d="M7 1.25 13.25 9.25H.75z" fill="#707070" stroke="#707070" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <span class="ol-scroll-thumb"></span>
+                <svg class="ol-scroll-down" viewBox="0 0 14 10" width="14" height="10"><path d="M7 8.75 13.25.75H.75z" fill="#707070" stroke="#707070" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <template id="jo-recipient-template">
+    <div class="jo-row">
+      <select class="jo-status" aria-label="Presence status">
+        <option value="unknown">White dot</option>
+        <option value="available">Available</option>
+        <option value="busy">Busy</option>
+        <option value="away">Away</option>
+        <option value="none">No dot</option>
+      </select>
+      <input type="text" class="jo-name" aria-label="Name" />
+      <button type="button" class="btn-secondary jo-remove" aria-label="Remove">&times;</button>
+    </div>
+  </template>
+
+  <template id="jo-attachment-template">
+    <div class="jo-row">
+      <input type="text" class="jo-att-name" aria-label="File name" placeholder="File name" />
+      <input type="text" class="jo-att-size" aria-label="Size" placeholder="Size" />
+      <label class="btn-secondary jo-file">Pick file<input type="file" class="jo-att-file" hidden /></label>
+      <button type="button" class="btn-secondary jo-remove" aria-label="Remove">&times;</button>
+    </div>
+  </template>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='html-to-image.js') }}"></script>
+  <script src="{{ url_for('static', filename='job_order.js') }}"></script>
+{% endblock %}

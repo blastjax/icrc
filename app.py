@@ -135,6 +135,11 @@ def progress_tracker():
     return render_template("progress_tracker.html", current_page="progress-tracker")
 
 
+@app.route("/job-order")
+def job_order():
+    return render_template("job_order.html", current_page="job-order")
+
+
 @app.route("/progress-tracker/<project_id>")
 def progress_tracker_detail(project_id):
     project = pm_db.get_progress_project(project_id)

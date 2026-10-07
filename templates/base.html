@@ -17,6 +17,7 @@
       <a class="sidebar-link{% if current_page == 'working-advance' %} active{% endif %}" href="{{ url_for('working_advance') }}">Working Advance</a>
       <a class="sidebar-link{% if current_page == 'project-management' %} active{% endif %}" href="{{ url_for('project_management') }}">Project Management</a>
       <a class="sidebar-link{% if current_page == 'progress-tracker' %} active{% endif %}" href="{{ url_for('progress_tracker') }}">Progress Tracker</a>
+      <a class="sidebar-link{% if current_page == 'job-order' %} active{% endif %}" href="{{ url_for('job_order') }}">Job Order</a>
     </nav>
     <main class="content">
       {% block content %}{% endblock %}
