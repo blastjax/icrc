@@ -306,6 +306,11 @@
     })
   );
 
+  // Swedish locale formats as YYYY-MM-DD in local time (toISOString would be UTC).
+  const today = new Date().toLocaleDateString("sv");
+  $("jo-date").value = today;
+  $("jo-replied-date").value = today;
+
   DEFAULT_TO.forEach((values) => addRow($("jo-to"), values));
   DEFAULT_CC.forEach((values) => addRow($("jo-cc"), values));
   DEFAULT_ATTACHMENTS.forEach((values) => addRow($("jo-attachments"), values));
