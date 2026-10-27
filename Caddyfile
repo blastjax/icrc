@@ -3,7 +3,7 @@
 # running only this stack it is the whole config of this repo's own caddy
 # service. It proxies to the icrc-web alias rather than `web` because the edge
 # network is shared and every app there has a `web` service.
-maiacruz.com {
+icrc.maiacruz.com {
 	encode gzip
 	reverse_proxy icrc-web:5000
 }
